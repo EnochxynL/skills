@@ -48,6 +48,10 @@ sudo ubuntu-drivers autoinstall # 自动安装推荐驱动
 
 等价于图形化操作：`kubuntu-driver-manager`
 
+请务必`sudo apt upgrade`！否则内核更新后其他包未更新，会导致上网问题
+
+[ubuntu22.04安装Nvidia显卡驱动之后无法上网问题记录 - 知乎](https://zhuanlan.zhihu.com/p/1933076829876523734)
+
 ### 包管理器
 
 [Nala - 功能丰富的 APT 命令行前端](https://cn.linux-terminal.com/?p=4419)
