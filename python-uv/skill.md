@@ -1,6 +1,3 @@
-# SKILL
-
-```skill
 ---
 name: python-uv
 description: Use when managing Python environments with uv as a global environment manager, installing packages via uv pip, configuring cache and mirror sources, handling pkg_resources/setuptools compatibility, numpy version downgrades, src-layout extraPaths, and running CLI tools via uv tool install (uvx).
@@ -20,7 +17,8 @@ metadata:
     - python-uv-vscode
     - python-packages
 ---
-```
+
+# SKILL
 
 ## Python(UV) — 手动环境与自动项目管理
 
