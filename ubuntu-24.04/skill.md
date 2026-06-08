@@ -175,6 +175,8 @@ UUID=48AEF791AEF77632 /media/enoch/DISK ntfs defaults 0 2
 
 ### 工具链安装
 
+上网工具的安装还是到 `https://github.com/v2rayA/v2raya-apt/tree/master/pool/main/v` 下载稳定版的 deb 包吧。
+
 python——uv安装
 
 ```
