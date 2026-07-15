@@ -55,8 +55,6 @@ winetricks list          # 列出所有可用组件
 winetricks list-download # 列出可下载的组件
 ```
 
-## 可选配置
-
 ### 卸载 32 位 Wine
 
 [Linux软件包循环依赖解决 彻底删除i386架构 - CSDN](https://blog.csdn.net/qq_62344659/article/details/142220396)
@@ -64,6 +62,8 @@ winetricks list-download # 列出可下载的组件
 [Linux软件包循环依赖解决 彻底删除i386架构 - 易微帮](https://www.ewbang.com/community/article/details/1000066632.html)
 
 如果不需要运行 32 位程序，可移除 i386 架构以减少依赖。
+
+## 可选配置
 
 ### Bottles（GUI 替代方案）
 
