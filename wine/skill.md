@@ -69,6 +69,14 @@ winetricks list-download # 列出可下载的组件
 
 Bottles 是一个基于 Flatpak 的 Wine 前缀管理器，提供图形化界面管理 WINEPREFIX、Wine 版本切换、组件安装等。适合不想手敲命令的用户。
 
+### Proton 系兼容层（游戏场景）
+
+[ProtonUp-Qt](https://github.com/DavidoTek/ProtonUp-Qt)（Flatpak 中叫 ProtonPlus）是 Wine/Proton 版本管理器，可下载社区维护的兼容层。
+
+Steam 游戏优先用 Proton（Valve 官方维护），非 Steam 游戏可通过 Bottles/Lutris 调用。社区版本如 **Proton GE**（集成媒体解码器补丁）、**dwproton**（集成 Dawn Winery 团队的日系/国产游戏修复 + dxvk-gplasync）对特定游戏兼容性更好。底层仍是 WINEPREFIX，用户不需手动管理——启动器自动创建、配置、安装依赖。
+
+与 vanilla Wine 的关键区别：预置 DXVK/VKD3D、游戏专用补丁、无需手动 `WINEPREFIX=`；但 `winetricks` 组件仍需通过 GUI 按需安装（如 cjkfonts）。
+
 ## 手动环境管理
 
 Wine 没有类似 `pyproject.toml` 或 `devcontainer.json` 的项目级配置文件，一切通过 WINEPREFIX 手动管理。核心操作模型：
