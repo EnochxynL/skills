@@ -190,6 +190,8 @@ Wine 运行在用户空间（Ring 3），无法模拟 Windows 内核（Ring 0）
 
 **直接 syscall 调用：** 部分 DRM 绕过 Windows 库直接发起 syscall，syscall 号在 Wine 下与 Linux 原生 syscall 冲突，难以通用解决。
 
+**硬件设备访问（Keil + ST-Link/J-Link 等嵌入式工具链）：** IDE 本身（Keil、IAR）也许能跑，但调试器/烧录器需要通过 Windows 内核驱动（`.sys`）走 USB bulk/interrupt 传输与硬件通信。Wine 无法加载内核驱动，也不支持底层 USB 传输。替代方案：用 Linux 原生的 OpenOCD、stlink、Segger 官方 Linux 包，或者跑 Windows 虚拟机并开启 USB 直通。
+
 [Linux/Proton 反作弊兼容性矩阵与追踪](https://blog.hotdry.top/posts/2025/12/01/linux-proton-anticheat-compatibility-matrices/)
 
 更实用的做法是在 [ProtonDB](https://www.protondb.com/) 和 [WineHQ AppDB](https://appdb.winehq.org/) 查询特定程序的兼容性报告。对于完全不兼容的程序，双系统 Windows 仍是唯一方案。
