@@ -1,3 +1,33 @@
+---
+name: v2raya
+description: Use when working with v2rayA proxy — installation from deb/pkg, WSL/LAN sharing, command-line arguments, IPv6 support, Windows service setup, and common pitfalls.
+metadata:
+  hermes:
+    tags:
+      - v2raya
+      - v2ray
+      - xray
+      - proxy
+      - vpn
+      - wsl
+      - ipv6
+  related_skills:
+    - ubuntu-24.04
+---
+
+# V2RayA — 代理客户端配置与管理
+
+## Overview
+
+V2RayA 是 V2Ray/Xray 的 Web GUI 前端，提供透明代理、全局代理等功能。本 skill 覆盖 deb 包与软件源安装、WSL/局域网共享、命令行参数、IPv6 适配、Windows 服务配置以及常见报错处理。
+
+## When to Use
+
+* 安装或配置 V2RayA 客户端时
+* 需要 WSL2 通过 Windows 宿主机代理时
+* 配置 IPv6 支持时
+* 排查连接被重置、TLS 握手失败等问题时
+* 查找机场/服务商时
 
 ## 常规配置
 
@@ -79,3 +109,25 @@ https://my.ipv6boy.com/index.php#/register?code=nNdMM3zS
 [[咨询]关于不退出客户端的情况下（关闭代理/断开连接）的可行性 · Issue #4595 · 2dust/v2rayN](https://github.com/2dust/v2rayN/issues/4595)
 
 [v2rayN_An existing connection was forcibly closed by the remote host. - 开发调优 - LINUX DO](https://linux.do/t/topic/113689)
+
+## Verification Checklist
+
+* [ ] **V2RayA 已安装**
+
+    ```bash
+    v2raya --version
+    ```
+* [ ] **服务已启动**
+
+    ```bash
+    sudo systemctl status v2raya
+    ```
+* [ ] **Web 面板可访问**
+
+    浏览器打开 `http://127.0.0.1:2017`
+
+* [ ] **代理端口监听正常**
+
+    ```bash
+    ss -tlnp | grep -E '2017|7897'
+    ```
