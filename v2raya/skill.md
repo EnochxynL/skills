@@ -1,17 +1,25 @@
 
 ## 常规配置
 
+[Debian / Ubuntu - v2rayA](https://v2raya.org/en/docs/prologue/installation/debian/)
+
 ### 从 deb 文件安装
 
 [[Bug]: 更新 xray core 到最新版 v26.1.31 后报错 · Issue #8736 · 2dust/v2rayN](https://github.com/2dust/v2rayN/issues/8736)
 
-由于最新仓库使用的是 xray 而非 v2ray 而我的服务商没有更新对 xray 的相关适配，因此下载旧版 deb 包手动安装。
+由于最新仓库使用的是 xray 而非 v2ray 而我的服务商没有更新对 xray 的相关适配，因此下载旧版 deb 包手动安装。到 `https://github.com/v2rayA/v2raya-apt/tree/master/pool/main/v` 下载稳定版的 deb 包吧。
+
+注意，`v2raya` 和 `v2ray` 都要安装，它们彼此是前后端的关系。
 
 ### 从软件源安装
 
 [ubuntu仓库公钥过期 · v2rayA/v2rayA · Discussion #1745](https://github.com/v2rayA/v2rayA/discussions/1745)、
 
 [daeuniverse.pages.dev](https://daeuniverse.pages.dev/)
+
+### 开机自启为服务
+
+`sudo systemctl enable v2raya.service`
 
 ## 可选配置
 
