@@ -116,11 +116,159 @@ Windows Registry Editor Version 5.00
 pacman -S mingw-w64-ucrt-x86_64-ntldd          # 依赖检测（打包发布用）
 ```
 
-### 示例：RoboCup2D soccerwindow2 依赖
+### 安装依赖库
 
 [Windows下编译linux程序，报错解决方案_linux_不吃鱼的小时喵-华为开发者空间](https://huaweicloud.csdn.net/653f89f58c4ad05cd82a9f3f.html)
 
 很多 Ubuntu 下的依赖包在 MSYS2 下有对应，需要手动安装，例如 Boost 叫 `mingw-w64-ucrt-x86_64-boost` 。
+
+### pacman 常用包速查
+
+[MSYS2 常用命令 - 腾讯云](https://cloud.tencent.cn/developer/article/2544149)
+
+[FreeCAD Compile on MinGW](https://wiki.freecad.org/Compile_on_MinGW/tr)
+
+[Build preparations for Windows (MSYS2) - C47 Wiki](https://gitlab.com/h2x/c47-wiki/-/wikis/Build-preparations-for-Windows)
+
+核心开发包（以 UCRT64 为例）：
+
+```bash
+# 基础构建工具
+pacman -S --needed base-devel git make wget zip unzip tar patch
+
+# CMake + Ninja（推荐组合）
+pacman -S mingw-w64-ucrt-x86_64-cmake
+pacman -S mingw-w64-ucrt-x86_64-ninja
+
+# Python 工具链
+pacman -S mingw-w64-ucrt-x86_64-python
+pacman -S mingw-w64-ucrt-x86_64-python-pip
+pacman -S mingw-w64-ucrt-x86_64-python-wheel
+
+# 交叉编译 / 多架构支持
+pacman -S mingw-w64-ucrt-x86_64-gdb-multiarch
+```
+
+包名规律：通用工具不带 `python-` 前缀（如 ninja、cython），Python 绑定库带 `python-` 前缀（如 meson-python、sphinx）。
+
+## 全局管理
+
+MSYS2 没有 pyenv/uv 那样的版本管理器——每个子系统（ucrt64/mingw64/clang64）内 pacman 只保留一个 GCC 版本。多版本共存靠手动策略，CMake 生成器靠显式指定。
+
+### 对接 CMake 构建系统
+
+[MSYS2 - Using CMake in MSYS2](https://www.msys2.org/docs/cmake/#examples)
+
+[msys2-toolchain - GitHub](https://github.com/nathanjhood/msys2-toolchain)
+
+**始终显式指定 `-G`**，不要依赖默认值：
+
+| 场景 | 生成器 | 说明 |
+|---|---|---|
+| 日常开发 | `-G Ninja` | MSYS2 推荐，快且少出错 |
+| GNU Make 工作流 | `-G "MSYS Makefiles"` | 用 MSYS2 的 make |
+| 纯 Windows 构建 | `-G "MinGW Makefiles"` | 用 mingw32-make |
+
+```bash
+cmake -G Ninja <source-dir> -DCMAKE_BUILD_TYPE=Release
+cmake --build .
+```
+
+**锁定工具链**：创建 toolchain 文件确保可复现构建，而非依赖环境 PATH：
+
+```cmake
+# toolchain_ucrt64.cmake
+set(TOOLCHAIN_DIR "C:/msys64/ucrt64")
+set(CMAKE_C_COMPILER   ${TOOLCHAIN_DIR}/bin/gcc.exe)
+set(CMAKE_CXX_COMPILER ${TOOLCHAIN_DIR}/bin/g++.exe)
+set(CMAKE_AR           ${TOOLCHAIN_DIR}/bin/gcc-ar.exe)
+set(CMAKE_RC_COMPILER  ${TOOLCHAIN_DIR}/bin/windres.exe)
+set(CMAKE_FIND_ROOT_PATH ${TOOLCHAIN_DIR})
+set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
+set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
+set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
+```
+
+用法：
+
+```bash
+cmake -DCMAKE_TOOLCHAIN_FILE=toolchain_ucrt64.cmake -G Ninja <source-dir>
+```
+
+### 对接 Meson 构建系统
+
+MSYS2 原生支持 Meson——在 MSYS2 shell 中 Meson 自动识别 MinGW 编译器和路径：
+
+```bash
+pacman -S mingw-w64-ucrt-x86_64-meson
+meson setup builddir
+meson compile -C builddir
+```
+
+跨子系统编译时同样推荐用交叉文件（cross file）固定工具链路径。
+
+### 多版本 GCC 共存与切换
+
+[MSYS2 中安装 GCC 13.2.0 版本完整指南 - 博客园](https://www.cnblogs.com/yimeimanong/p/19549348)
+
+[MSYS2 - Environments](https://www.msys2.org/docs/environments/)
+
+不同子系统（ucrt64/mingw64/clang64/clangarm64）各自有独立的 GCC/Clang 版本，这是 MSYS2 原生支持的多版本切换方式：
+
+```bash
+# 打开不同终端即切换整套工具链
+msys2_shell.cmd -ucrt64     # GCC + UCRT（推荐）
+msys2_shell.cmd -mingw64    # GCC + MSVCRT
+msys2_shell.cmd -clang64    # Clang + UCRT
+```
+
+**同一子系统内安装特定旧版本**（如果仓库已更新，需手动下载）：
+
+1. 从 [repo.msys2.org](https://repo.msys2.org/mingw/mingw64/) 下载目标版本的 `.pkg.tar.zst`
+2. 本地安装：
+
+```bash
+pacman -U mingw-w64-ucrt-x86_64-gcc-13.2.0-1-any.pkg.tar.zst \
+         mingw-w64-ucrt-x86_64-gcc-libs-13.2.0-1-any.pkg.tar.zst
+```
+
+**锁定版本防止升级**——编辑 `/etc/pacman.conf`：
+
+```ini
+IgnorePkg = mingw-w64-ucrt-x86_64-gcc mingw-w64-ucrt-x86_64-gcc-libs
+```
+
+**Shell 级别快速切换**（手工管理多个安装路径）：
+
+```bash
+# 创建环境脚本
+cat > ~/.gcc-ucrt64 << 'EOF'
+export PATH="/ucrt64/bin:$PATH"
+export CC="/ucrt64/bin/gcc"
+export CXX="/ucrt64/bin/g++"
+EOF
+
+# 使用
+source ~/.gcc-ucrt64
+```
+
+### 与 Windows SDK / MSVC 的交互
+
+MSYS2 和 MSVC 是 Windows 上两套独立的 C/C++ 生态，C++ ABI 不兼容，**不能混用 .lib 和 .o**。
+
+如果必须链接 MSVC 库，有两种务实路径：
+
+**1. UCRT64 环境**——C 运行时层面对齐 MSVC。两者都用 ucrt，C 接口互通；但 C++ ABI 不同（libstdc++ vs MSVC STL），C++ 对象不可跨边界传递。
+
+**2. Clang 的 MSVC 兼容模式**——在 MSYS2 shell 中调用 clang，但指定 MSVC 目标，使用 Windows SDK 的链接器和库：
+
+```bash
+clang --target=x86_64-pc-windows-msvc -fuse-ld=link.exe source.c -o output.exe
+```
+
+需要配合 Visual Studio 的 `vcvarsall.bat` 设置 `LIB` 和 `INCLUDE` 环境变量。
+
+> 实际项目如果遇到 MinGW ↔ MSVC 互操作问题，最简单的方案是两端各编各的 C API，在 C 边界对接。
 
 ## Verification Checklist
 
