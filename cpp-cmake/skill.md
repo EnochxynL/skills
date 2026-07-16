@@ -78,6 +78,8 @@ set(CMAKE_PREFIX_PATH "$ENV{CONDA_PREFIX}")
 
 ## 自动项目管理
 
+CMake 项目的依赖管理，可以通过：apt、conan、vcpkg、conda、cmake自己（FetchContent 拉取依赖）。
+
 ### 纯 CMake 项目初始化
 
 VS Code 中按 `Ctrl+Shift+T`（CMake: Quick Start）可快速新建项目。手动创建最小 `CMakeLists.txt`：
