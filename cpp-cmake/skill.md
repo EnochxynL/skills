@@ -199,7 +199,7 @@ target_link_libraries(my_app PRIVATE MyLib::mylib)
 
 #### install() + CPack
 
-[CMake install 和打包教程 - 知乎](https://zhuanlan.zhihu.com/p/1925244374566025128)
+[现代 CMake 学习（5）：安装与打包 (install & CPack) - 知乎](https://zhuanlan.zhihu.com/p/1925244374566025128)
 
 在 CMakeLists.txt 中配置 `install()` 规则，配合 CPack 生成安装包。
 
