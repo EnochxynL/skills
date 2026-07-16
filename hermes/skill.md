@@ -46,5 +46,17 @@ Hermes 作为全局 Agent，可以有 Claude Code 和 CodeX 作为项目级 Agen
 
 [【转载】我花了太多时间整理 Claude Code 工具：这是我找到的所有内容原文链接 好吧，现在是忏悔时间。我从今年 - 掘金](https://juejin.cn/post/7565268465709465640)
 
-CC Switch 可以方便地管理配置文件、供应商、对话记录、MCP、Skill等
+CC Switch 可以方便地管理配置文件、供应商、对话记录、MCP、Skill等。但是 MCP 配置似乎对 Hermes 无效。但可以打开 Hermes Dashboard。
 
+## CC Sessions
+
+[codex claude会话管理，支持删除、修复、备份、统计 - 资源荟萃 - LINUX DO](https://linux.do/t/topic/2009998)
+
+虽然 CC Switch 也可以管理会话，但 CC Sessions 更专业。
+
+## 全局管理
+
+- 用 Hermes Dashboard 管理 Hermes 配置
+- 用 CC Switch 管理 Claude Code 和 CodeX 配置
+
+### 对话记录迁移

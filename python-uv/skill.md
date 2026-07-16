@@ -88,6 +88,10 @@ export UV_PROJECT_ENVIRONMENT=/path/to/envs
 
 [使用环境 | uv 中文文档](https://uv.doczh.com/pip/environments/#_1)
 
+### 全局 CLI 工具免安装
+
+[How to Use uvx to Run Python Tools from Any Git Branch or Commit | BSWEN](https://docs.bswen.com/blog/2026-03-05-uvx-git-branch/#:~:text=The%20key%20syntax%20is%20uvx%20--from%20git%2Bhttps%3A%2F%2Fgithub.com%2Fuser%2Frepo%40ref%20tool-name.,and%20lets%20you%20test%20development%20versions%20in%20seconds.)
+
 ### 全局 CLI 工具安装
 
 安装全局 CLI 工具（隔离环境，不污染 Python 依赖）。等同于 pipx，但更快
