@@ -130,7 +130,7 @@ Triplet 指定目标平台和链接方式（如 `x64-windows`、`x64-windows-sta
 
 [使用 vcpkg 一直报错？- CSDN](https://blog.csdn.net/weixin_52236586/article/details/145348046)
 
-根本原因：vcpkg 需要完整的 MSVC 工具链。确保 VS Build Tools 已安装且环境已激活。
+根本原因：vcpkg 需要完整的 MSVC 工具链，而不是单纯的 MSVC cl 编译器。确保 VS Build Tools 已安装且环境已激活。
 
 ## Verification Checklist
 

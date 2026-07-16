@@ -60,6 +60,20 @@ conan profile show   # 查看当前 profile
 
 Profile 决定了包的二进制兼容性——不同 profile 设置会产生不同版本的预编译包或触发本地重编译。
 
+## 可选配置
+
+### VS Code 集成
+
+```json
+"cmake.configureArgs": [
+    "--preset conan-default"
+]
+```
+
+### ROS 集成
+
+[ROS — conan 2.26.2 documentation](https://docs.conan.io/2/integrations/ros.html)
+
 ## 自动项目管理
 
 ### 项目初始化
@@ -97,7 +111,7 @@ cmake --build .
 
 **`--preset conan-default` 是必须的**——没有它，CMake 看不到 Conan 安装的依赖。
 
-### 不同构建配置
+### CMake 不同构建配置
 
 [Conan 版本控制](https://docs.conan.org.cn/2/tutorial/versioning.html)
 
@@ -126,14 +140,6 @@ conan install . --deployer=full_deploy
 ```bash
 conan create .                       # 本地构建并测试包
 conan upload <pkg-ref> -r=myremote   # 上传到远程仓库
-```
-
-## VS Code 集成
-
-```json
-"cmake.configureArgs": [
-    "--preset conan-default"
-]
 ```
 
 ## Verification Checklist

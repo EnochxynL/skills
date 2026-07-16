@@ -1,5 +1,5 @@
 ---
-name: msys2
+name: cpp-msys2
 description: Use when working with MSYS2 on Windows — installing the MSYS2 environment, understanding mingw64/ucrt64/clang64 subsystems, installing build toolchains via pacman, and configuring terminal/VSCode/right-click menu integration.
 metadata:
   hermes:
@@ -10,6 +10,7 @@ metadata:
       - build-tools
       - gcc
       - pacman
+      - c++
   related_skills:
     - wine
 ---
