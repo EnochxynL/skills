@@ -2,16 +2,16 @@
 layout: home
 
 hero:
-  name: Enoch 技能手册
+  name: Enochxyn's Skills
   text: 开发环境配置与工具指南
-  tagline: C++ · Python · ROS · 容器 · 包管理
+  tagline: 环境容器 · 编程语言 · 软件框架 · 项目管理
   actions:
     - theme: brand
       text: 开始阅读
       link: /ubuntu-24.04/skill
     - theme: alt
-      text: GitHub
-      link: https://github.com/EnochxynL/skills
+      text: Notion
+      link: https://enochxyn.notion.site/2a75e4fc7813808c9719dfd110d7ebba
 
 features:
   - title: C++ 开发工具链
