@@ -1,0 +1,12 @@
+{
+  "name": "enoch-skills",
+  "private": true,
+  "devDependencies": {
+    "vitepress": "^1.6.0"
+  },
+  "scripts": {
+    "dev": "vitepress dev",
+    "build": "vitepress build",
+    "preview": "vitepress preview"
+  }
+}
