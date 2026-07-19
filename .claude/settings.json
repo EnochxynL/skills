@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "mcp__*"
+      "mcp__notion__notion-fetch",
+      "mcp__notion__notion-search"
     ]
   }
 }
