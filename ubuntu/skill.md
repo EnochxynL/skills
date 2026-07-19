@@ -1,5 +1,5 @@
 ---
-name: ubuntu-24.04
+name: ubuntu
 description: Ubuntu 24.04 (Lubuntu/Kubuntu) setup and configuration — apt sources, NVIDIA drivers, Fcitx5 Chinese input, Bluetooth dual-boot sync, auto-mount disks, KDE locale, development toolchain installation.
 metadata:
   hermes:

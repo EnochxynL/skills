@@ -12,7 +12,7 @@ metadata:
       - wsl
       - ipv6
   related_skills:
-    - ubuntu-24.04
+    - ubuntu
 ---
 
 # V2RayA — 代理客户端配置与管理

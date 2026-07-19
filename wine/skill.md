@@ -10,7 +10,7 @@ metadata:
       - winetricks
       - wineprefix
   related_skills:
-    - ubuntu-24.04
+    - ubuntu
 ---
 
 # WineHQ — Linux 运行 Windows 程序

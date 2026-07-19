@@ -14,7 +14,7 @@ metadata:
       - python
   related_skills:
     - ros2
-    - ubuntu-24.04
+    - ubuntu
     - cpp-cmake
     - python-uv
     - podman

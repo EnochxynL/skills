@@ -11,7 +11,7 @@ metadata:
       - ros
       - x11
   related_skills:
-    - ubuntu-24.04
+    - ubuntu
 ---
 
 # Podman — 容器环境管理

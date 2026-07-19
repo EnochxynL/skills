@@ -15,7 +15,7 @@ export default defineConfig({
       {
         text: '基础环境',
         items: [
-          { text: 'Ubuntu 24.04', link: '/ubuntu-24.04/skill' },
+          { text: 'Ubuntu 24.04', link: '/ubuntu/skill' },
           { text: 'Podman', link: '/podman/skill' },
           { text: 'Wine', link: '/wine/skill' },
         ],

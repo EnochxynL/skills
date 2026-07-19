@@ -8,7 +8,7 @@ hero:
   actions:
     - theme: brand
       text: 开始阅读
-      link: /ubuntu-24.04/skill
+      link: /ubuntu/skill
     - theme: alt
       text: Notion
       link: https://enochxyn.notion.site/2a75e4fc7813808c9719dfd110d7ebba

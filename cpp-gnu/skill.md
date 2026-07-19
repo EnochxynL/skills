@@ -12,7 +12,7 @@ metadata:
       - packaging
       - c++
   related_skills:
-    - ubuntu-24.04
+    - ubuntu
     - cpp-msys2
 ---
 
