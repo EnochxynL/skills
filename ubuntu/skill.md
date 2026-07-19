@@ -204,24 +204,6 @@ sudo nala remove snapd
 UUID=48AEF791AEF77632 /media/enoch/DISK ntfs defaults 0 2
 ```
 
-## 开发习惯
-
-### 工具链安装
-
-上网工具的安装还是到 `https://github.com/v2rayA/v2raya-apt/tree/master/pool/main/v` 下载稳定版的 deb 包吧。
-
-python——uv安装
-
-```
-wget -qO- https://astral.sh/uv/install.sh | sh
-```
-
-nodejs——pnpm安装
-
-```
-wget -qO- https://get.pnpm.io/install.sh | sh -
-```
-
 ### KDE中文显示
 
 [kreadconfig5 man | Linux Command Library](https://linuxcommandlibrary.com/man/kreadconfig5)
