@@ -2,8 +2,8 @@ import { defineConfig } from 'vitepress'
 
 export default defineConfig({
   base: '/skills/',
-  title: 'Enoch 技能手册',
-  description: '开发环境配置与工具使用指南',
+  title: '安装技巧',
+  description: 'Enochxyn\'s Skills',
 
   themeConfig: {
     nav: [

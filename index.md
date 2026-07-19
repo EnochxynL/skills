@@ -3,7 +3,7 @@ layout: home
 
 hero:
   name: Enochxyn's Skills
-  text: 开发环境配置与工具指南
+  text: 工具链配置指南
   tagline: 环境容器 · 编程语言 · 软件框架 · 项目管理
   actions:
     - theme: brand
