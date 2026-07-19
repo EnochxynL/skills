@@ -152,7 +152,7 @@ pacman -S mingw-w64-ucrt-x86_64-gdb-multiarch
 
 包名规律：通用工具不带 `python-` 前缀（如 ninja、cython），Python 绑定库带 `python-` 前缀（如 meson-python、sphinx）。
 
-## 全局管理
+## Global Manage
 
 MSYS2 没有 pyenv/uv 那样的版本管理器——每个子系统（ucrt64/mingw64/clang64）内 pacman 只保留一个 GCC 版本。多版本共存靠手动策略，CMake 生成器靠显式指定。
 
