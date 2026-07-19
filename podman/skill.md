@@ -29,7 +29,7 @@ Podman 是 Docker 的无 daemon 替代品，命令兼容，更轻量安全。本
 * 容器内 GUI 程序（ROS/Gazebo 等）需要 X11 转发时
 * 清理容器/镜像缓存时
 
-## 常规配置
+## Common Install
 
 ### 安装 Podman
 
@@ -56,7 +56,7 @@ prefix = "docker.io"
 location = "your-mirror-url"
 ```
 
-## 可选配置
+## Optional Configure
 
 ### Docker 安装（备选）
 
@@ -115,7 +115,7 @@ docker system prune -a    # Docker 等价命令
 
 [ros - Official Image | Docker Hub](https://hub.docker.com/_/ros/)
 
-## 手动环境管理
+## Instance Manage
 
 镜像的文件系统不可变，容器在镜像之上叠加可写层。容器不是虚拟机，而是运行环境（类似 AppImage）——**容器需要前台进程才能保持运行**，主进程结束则容器停止。可以当成一个**服务**来理解。
 
@@ -228,7 +228,7 @@ podman run -e DISPLAY=host.docker.internal:0 <image>
 
 > 尝试搞清楚容器自己的域名：在 Docker Desktop 运行 ROS 注意到 `ROS_MASTER_URI=http://docker-desktop:11311/` ，看来 `docker-desktop` 是容器自己的域名
 
-## 自动项目管理（Dev Container）
+## Project Manage（Dev Container）
 
 在 VS Code 中通过 Dev Container 连接容器，享受完整 IDE 体验而非纯终端。
 

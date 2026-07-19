@@ -38,7 +38,7 @@ vcpkg 是微软维护的跨平台 C/C++ 包管理器，与 CMake 和 Visual Stud
 * 排查 vcpkg 基线错误或找不到 MSVC 时
 * 换镜像源或配置代理时
 
-## 常规配置
+## Common Install
 
 ### 安装
 
@@ -66,7 +66,7 @@ vcpkg 是微软维护的跨平台 C/C++ 包管理器，与 CMake 和 Visual Stud
 }
 ```
 
-## 自动项目管理
+## Project Manage
 
 ### vcpkg 清单模式
 

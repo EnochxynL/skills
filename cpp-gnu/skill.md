@@ -33,7 +33,7 @@ GNU 工具链（GCC + GNU Make + binutils）是 Linux 下最基础的 C/C++ 构�
 * 检查二进制文件的动态库依赖（ldd/ntldd）时
 * 打包发布 C++ 程序时
 
-## 常规配置
+## Common Install
 
 ### GNU Make 与 base-devel 包组
 
@@ -55,7 +55,7 @@ make -j$(nproc)
 
 [Makefile — Conan 2.26.2 文档](https://docs.conan.io/2/integrations/makefile.html)
 
-## 可选配置
+## Optional Configure
 
 ### Automake / Autoconf
 

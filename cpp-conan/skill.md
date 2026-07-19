@@ -30,7 +30,7 @@ Conan 是跨平台的 C/C++ 包管理器，采用**集中缓存 + 版本区分**
 * 排查 CMake preset 未生效导致找不到依赖时
 * 创建和发布自己的 Conan 包时
 
-## 常规配置
+## Common Install
 
 ### 安装
 
@@ -60,7 +60,7 @@ conan profile show   # 查看当前 profile
 
 Profile 决定了包的二进制兼容性——不同 profile 设置会产生不同版本的预编译包或触发本地重编译。
 
-## 可选配置
+## Optional Configure
 
 ### VS Code 集成
 
@@ -74,7 +74,7 @@ Profile 决定了包的二进制兼容性——不同 profile 设置会产生不
 
 [ROS — conan 2.26.2 documentation](https://docs.conan.io/2/integrations/ros.html)
 
-## 自动项目管理
+## Project Manage
 
 ### 项目初始化
 

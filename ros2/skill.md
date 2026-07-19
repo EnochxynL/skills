@@ -42,7 +42,7 @@ ROS 2 是 ROS 的全面重构版本，改进了实时性、安全性和多平台
 * rviz2 启动报 Segmentation fault 时
 * 通过 rosbridge + roslibpy 实现 Windows 开发节点、WSL 运行服务端时
 
-## 常规配置
+## Common Install
 
 ### 添加 ROS 2 源
 
@@ -76,7 +76,7 @@ sudo apt update
 sudo apt install ros-humble-desktop-full
 ```
 
-## 可选配置
+## Optional Configure
 
 ### 安装 colcon
 
@@ -94,7 +94,7 @@ ROS 1 和 ROS 2 可以安装在同一系统上，通过 `source /opt/ros/<distro
 
 许多第三方包只以源码形式发布，直接 clone 到工作空间的 `src/` 下作为功能包一起构建即可。
 
-## 自动项目管理
+## Project Manage
 
 ### 创建工作空间
 

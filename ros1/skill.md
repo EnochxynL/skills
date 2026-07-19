@@ -37,7 +37,7 @@ ROS 依附于 Ubuntu，包由 apt 管理但有独立的软件源，不会像 pip
 * 排查 catkin_make 或 rosdep 构建错误时
 * 使用 PlotJuggler / rviz 等可视化调试时
 
-## 常规配置
+## Common Install
 
 ### 安装 WSL
 
@@ -70,7 +70,7 @@ uv pip install rospkg catkin-tools
 
 如果报错找不到 `catkin_make`，则 `uv pip install catkin_make`。
 
-## 自动项目管理
+## Project Manage
 
 ### 创建工作空间
 
