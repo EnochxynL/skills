@@ -14,12 +14,12 @@ hero:
       link: https://enochxyn.notion.site/2a75e4fc7813808c9719dfd110d7ebba
 
 features:
-  - title: C++ 开发工具链
-    details: MSVC、GNU、MSYS2 编译器配置，CMake 构建系统，Conan/vcpkg 包管理，PlatformIO 嵌入式开发
-  - title: Python 生态
-    details: pip 故障排查、UV 现代包管理、Conda 环境管理
-  - title: 基础设施
-    details: Ubuntu 24.04 环境、Podman 容器、Wine 兼容层
-  - title: 机器人 & 工具
-    details: ROS 1/2 开发、Node.js pnpm、v2rayA 代理、WandB 实验追踪
+  - title: 环境容器
+    details: Ubuntu 24.04 系统环境、Podman 容器化、Wine Windows 兼容层
+  - title: 编程语言
+    details: C++（MSVC/GNU/MSYS2 编译器、CMake 构建、Conan/vcpkg 包管理、PlatformIO 嵌入式）&middot; Python（pip 故障排查、UV 包管理、Conda 环境）&middot; Node.js（pnpm）
+  - title: 软件框架
+    details: ROS 1 / ROS 2 机器人开发框架
+  - title: 项目管理
+    details: Hermes 全局 Agent、WandB 实验追踪、v2rayA 代理
 ---
