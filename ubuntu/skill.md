@@ -285,6 +285,7 @@ onedrive --display-config
 * LyX源：[LyX PPA (release) : “LyX Team” team](https://blueprints.launchpad.net/~lyx-devel/+archive/ubuntu/release)
 * OBS Studio源：[Linux Installation | OBS](https://obsproject.com/kb/linux-installation)
 * Zotero源：[retorquere/zotero-pkg: Packaged versions of Zotero and Juris-M for Debian-based systems](https://github.com/retorquere/zotero-pkg)
+* NAPS2源：[Linux Scanning - NAPS2](https://www.naps2.com/linux-scanning)
 * ROS2源：[Ros2 | 镜像站使用帮助 | 清华大学开源软件镜像站 | Tsinghua Open Source Mirror](https://mirror.tuna.tsinghua.edu.cn/help/ros2/) [Ubuntu (deb packages) — ROS 2 Documentation: Jazzy documentation](https://docs.ros.org/en/jazzy/Installation/Ubuntu-Install-Debs.html)
 * WineHQ源：[Wine Builds | 镜像站使用帮助 | 清华大学开源软件镜像站 | Tsinghua Open Source Mirror](https://mirror.tuna.tsinghua.edu.cn/help/wine-builds/) [Debian/Ubuntu · Wiki · wine / wine · GitLab](https://gitlab.winehq.org/wine/wine/-/wikis/Debian-Ubuntu)
 * NodeSource源：[Repository Manual Installation · nodesource/distributions Wiki](https://github.com/nodesource/distributions/wiki/Repository-Manual-Installation)
