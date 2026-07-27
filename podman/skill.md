@@ -68,6 +68,29 @@ location = "your-mirror-url"
 
 [Docker + ROS2 开发环境搭建指南 | 小强的博客](https://wsxq2.55555.io/blog/2025/07/29/docker-ros2-%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA%E6%8C%87%E5%8D%97/)
 
+```sh
+#添加 Docker 官方 GPG key （可能国内现在访问会存在问题）
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+
+# 阿里源（推荐使用阿里的gpg KEY）
+curl -fsSL https://mirrors.aliyun.com/docker-ce/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+```
+
+添加 apt 源:
+```sh
+#Docker官方源
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+#阿里apt源
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://mirrors.aliyun.com/docker-ce/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+```
+
+更新源，安装最新版本的Docker
+```sh
+sudo apt update
+sudo apt install docker-ce docker-ce-cli containerd.io
+```
+
 ### Docker 换源
 
 [ghcr.io 中国可用镜像列表 | Docker 镜像资源](https://docker.aityp.com/s/ghcr.io)

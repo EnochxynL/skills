@@ -113,7 +113,7 @@ sudo timedatectl set-local-rtc 1
 
 ```bash
 sudo apt update
-sudo apt install $(check-language-support -l zh-hans)
+sudo apt install $(check-language-support -l zh-hans) # zh-hans 换成 zh_CN 是等价的
 ```
 
 还需要在`~/.config/fcitx5/profile`添加配置，示例配置片段：
@@ -156,20 +156,22 @@ Layout=
 由于依赖关系限制，建议手动使用`snap list`尝试挨个卸载。对于Ubuntu Studio 24.04，是这样的
 
 ```bash
-sudo snap remove firefox
-sudo snap remove thunderbird
-sudo snap remove gnome-42-2204
-sudo snap remove gnome-46-2404
-sudo snap remove freeshow
-sudo snap remove mesa-2404
-sudo snap remove gtk-common-themes
-sudo snap remove bare
-sudo snap remove snapd-desktop-integration
-sudo snap remove firmware-updater
-sudo snap remove core22
-sudo snap remove core24
-sudo snap remove snapd
-sudo nala remove snapd
+sudo snap remove --purge firefox
+sudo snap remove --purge thunderbird
+sudo snap remove --purge gnome-42-2204
+sudo snap remove --purge gnome-46-2404
+sudo snap remove --purge freeshow
+sudo snap remove --purge mesa-2404
+sudo snap remove --purge gtk-common-themes
+sudo snap remove --purge bare
+sudo snap remove --purge snapd-desktop-integration
+sudo snap remove --purge firmware-updater
+sudo snap remove --purge core22
+sudo snap remove --purge core24
+sudo snap remove --purge snapd
+sudo nala remove --purge snapd
+
+sudo nala remove --purge firefox thunderbird
 ```
 
 ### Windows蓝牙同步
@@ -204,7 +206,16 @@ sudo nala remove snapd
 UUID=48AEF791AEF77632 /media/enoch/DISK ntfs defaults 0 2
 ```
 
-### KDE中文显示
+另一种格式，酌情使用
+```sh
+echo "/dev/disk/by-uuid/26C4A0E0C4A0B389 /media/enoch/DISK/ ntfs defaults 0 2" | sudo tee /etc/fstab
+```
+
+### 自动挂载 home 到 NETS
+
+[把NTFS分区挂载为/home，KDE Plasma桌面的开机自启动程序不可写，什么原因？怎样解决？ - 知乎](https://www.zhihu.com/question/1951073971152877132)
+
+### KDE 中文显示
 
 [kreadconfig5 man | Linux Command Library](https://linuxcommandlibrary.com/man/kreadconfig5)
 
@@ -225,18 +236,54 @@ kwriteconfig5 --file plasma-localerc --group Translations --key LANGUAGE zh_CN:e
 
 等价于图形化操作：`systemsettings5 kcm_translations`设置显示语言为中文，窗口右下角【添加语言】、选择【简体中文】、下方【添加】，适当排序，关闭窗口，注销后重新登录（或者重启）
 
-### PCManFM文件管理器
+### KDE 桌面路径设置
+
+```bash
+systemsettings5 kcm_desktoppaths
+```
+
+### KDE 触控板设置
+
+```bash
+~/.config/kcminputrc
+systemsettings5 kcm_touchpad
+```
+
+### PCManFM 文件管理器
 
 ```bash
 sudo apt install --no-install-recommends pcmanfm-qt # --no-install-recommends 防止把整个 lxqt 安装。可用 nala 替代命令。
 ```
 
+### TLPUI
+
+```sh
+sudo add-apt-repository ppa:linuxuprising/apps
+sudo apt install tlpui
+systemctl status tlp
+systemctl enable tlp
+```
+
+### Onedrive
+
+```sh
+sudo apt install onedrive
+onedrive --dry-run --synchronize
+onedrive --display-config
+```
+
+若要长期同步，运行 `onedrive --monitor`
+
 ### 常用软件源
+
+对于 PPA 源，命令 `sudo software-properties-qt --enable-ppa ppa:linuxuprising/apps` 等价于 `sudo add-apt-repository ppa:linuxuprising/apps`
 
 * pacstall源：[Chaotic PPR | Pacstall](https://ppr.pacstall.dev/)
 * daeuniverse源：[daeuniverse.pages.dev](https://daeuniverse.pages.dev/)
 * rizin源：[Install package home:RizinOrg / rizin](https://software.opensuse.org/download/package?package=rizin\&project=home%3ARizinOrg)
 * Linux Uprising源：[Extra Ubuntu / Linux Mint Applications : “Linux Uprising” team](https://launchpad.net/~linuxuprising/+archive/ubuntu/apps/+index)
+* LyX源：[LyX PPA (release) : “LyX Team” team](https://blueprints.launchpad.net/~lyx-devel/+archive/ubuntu/release)
+* OBS Studio源：[Linux Installation | OBS](https://obsproject.com/kb/linux-installation)
 * ROS2源：[Ros2 | 镜像站使用帮助 | 清华大学开源软件镜像站 | Tsinghua Open Source Mirror](https://mirror.tuna.tsinghua.edu.cn/help/ros2/) [Ubuntu (deb packages) — ROS 2 Documentation: Jazzy documentation](https://docs.ros.org/en/jazzy/Installation/Ubuntu-Install-Debs.html)
 * WineHQ源：[Wine Builds | 镜像站使用帮助 | 清华大学开源软件镜像站 | Tsinghua Open Source Mirror](https://mirror.tuna.tsinghua.edu.cn/help/wine-builds/) [Debian/Ubuntu · Wiki · wine / wine · GitLab](https://gitlab.winehq.org/wine/wine/-/wikis/Debian-Ubuntu)
 * NodeSource源：[Repository Manual Installation · nodesource/distributions Wiki](https://github.com/nodesource/distributions/wiki/Repository-Manual-Installation)

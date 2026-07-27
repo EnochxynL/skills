@@ -63,6 +63,8 @@ Conda 不止是 Python 发行版，更是环境级的包管理器——Python �
 
 [Anaconda | RPM and Debian Repositories for Miniconda](https://www.anaconda.com/blog/rpm-and-debian-repositories-for-miniconda)
 
+https://www.anaconda.com/blog/rpm-and-debian-repositories-for-miniconda
+
 Miniforge 没有预构建的 deb 包，使用 Miniconda 的 apt 源：
 
 ```bash
