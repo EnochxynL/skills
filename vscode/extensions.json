@@ -1,0 +1,99 @@
+{
+    "recommendations": [
+        // Text Editing
+        "streetsidesoftware.code-spell-checker",
+        "usernamehw.errorlens",
+        "ibm.output-colorizer",
+        "gruntfuggly.todo-tree",
+        "intellsmi.comment-translate",
+        "fabiospampinato.vscode-highlight",
+        
+        // Editor Enhancements
+        "eamodio.gitlens",
+        "ryu1kn.partial-diff",
+        "vscode-icons-team.vscode-icons",
+        "spencerwmiles.vscode-task-buttons",
+        "ms-vscode-remote.vscode-remote-extensionpack",
+
+        // Copilot
+        "github.copilot",
+        "rooveterinaryinc.roo-cline",
+
+        // Programming Languages
+        "ms-toolsai.python-ds-extension-pack", // Python and data science support
+            "njqdev.vscode-python-typehint", // Python type hinting
+            "percy.vscode-pydata-viewer", // Python data viewer
+        "ms-vscode.cpptools-extension-pack",
+            "ms-vscode.makefile-tools",
+            "ms-vscode.hexeditor",
+        "vscjava.vscode-java-pack", // Java development with Maven archetypes and Fernflower decompiler
+        "ms-dotnettools.vscode-dotnet-pack", // .NET development
+            "ms-dotnettools.csdevkit", // Solution explorer support
+        "sterben.fpga-support", // Verilog FPGA Support Extension Pack
+
+        // IDE Integrations
+        "jacksonjim.keil-vscode-assistant", // Keil MDK integration
+        "mathworks.language-matlab", // MATLAB support
+            "volatile-static.vscmat", // MATLAB .mat file viewer
+
+        // Specialized Development
+        "platformio.platformio-ide", // PlatformIO IDE for IoT development
+        "adelphes.android-dev-ext", // Android development
+        "ranch-hand-robotics.rde-pack", // Robotics Development Extension Pack
+            "ranch-hand-robotics.rde-ros-1", // ROS1 support
+
+        // Domain Specific Languages for config, data and scripting
+        "redhat.vscode-xml",
+        "dbcode.dbcode", // SQL and database support
+            // "qwtel.sqlite-viewer", // SQLite viewer only
+        "ms-vscode.powershell", // PowerShell support
+        "rogalmic.bash-debug", // Bash debugging
+        "appliedengdesign.vscode-gcode-syntax", // G-code support
+            "gengar.nc-viewer", // G-code 3D visualizer
+        "randomfractalsinc.geo-data-viewer", // Geo data viewer
+
+        // Documentation and Diagrams
+        "hediet.vscode-drawio", // Draw.io integration
+        "pomdtr.excalidraw-editor",
+        "james-yu.latex-workshop", // LaTeX support
+            "nickfode.latex-formatter", // LaTeX formatter
+            "tecosaur.latex-utilities", // LaTeX formatted paste (image)
+            "kurusugawa-computer.formula-editor-vscode", // LaTeX equation editor
+            "alekskissinger.vstikzit", // TikZ diagram support
+            "iamhyc.overleaf-workshop", // Overleaf integration
+            // "tomoki1207.pdf", // PDF viewer (conflicts with LaTeX Workshop)
+        "foam.foam-vscode", // Foam for note-taking and knowledge management
+            "yzhang.markdown-all-in-one", // Markdown support
+            "bierner.markdown-mermaid", // Mermaid diagrams in Markdown
+            "corschenzi.mermaid-graphical-editor",
+
+        // Visualization
+        "alexnesnes.teleplot", // Serial and UDP plotter
+            // "badlogicgames.serial-plotter", // Serial plotter only
+        "adamwulkiewicz.graphicaldebugging-vscode", // Graphical debugging for C/C++ (cppdbg, cppvsdbg, lldb, cortex-debug), C# (coreclr), Java (java)
+            // "hediet.debug-visualizer", // Graphical debugging just for JavaScript/TypeScript (node-debug, chrome-debug)
+        
+        // Dashboards
+        "optuna.optuna-dashboard",
+        "swanlab.swanlab",
+
+        // Deployment Management
+        "redhat.vscode-community-server-connector",
+        "ms-azuretools.vscode-containers",
+        "github.vscode-github-actions",
+
+        // JavaScript/TypeScript
+        // "dbaeumer.vscode-eslint",
+        // "vue.volar",
+        // "codfrm.scriptcat-vscode",
+        // "donjayamanne.typescript-notebook",
+
+        /* // Decrepated
+        "pibcht.pack-core",
+        "orangex4.latex-sympy-calculator",
+        "grapecity.gc-excelviewer",
+        "hyeon.c-math-viewer",
+        "antfu.slidev", // Slidev for presentations
+        */
+    ]
+}
