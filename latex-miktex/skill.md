@@ -125,6 +125,8 @@ Topics:
   repositories - Commands for managing MiKTeX package repositories
 ```
 
+建议安装 ctex 以支持中文。cjk 比较老了……
+
 开启自动安装（on-the-fly）功能，安装缺失的包……
 
 ## Project Manage
