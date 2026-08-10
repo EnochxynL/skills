@@ -1,3 +1,36 @@
+---
+name: latex-miktex
+description: Use when setting up or troubleshooting LaTeX with MiKTeX on Windows — installing MiKTeX, configuring latexmk with Strawberry Perl, integrating VSCode LaTeX Workshop, managing packages via miktex CLI, and resolving common MiKTeX issues.
+metadata:
+  hermes:
+    tags:
+      - miktex
+      - latex
+      - tex
+      - windows
+      - perl
+      - latexmk
+      - vscode
+---
+
+# LaTeX — MiKTeX 写作环境搭建
+
+## Overview
+
+MiKTeX 是 Windows 上最流行的 LaTeX 发行版之一。与 TeX Live 不同，MiKTeX 支持按需自动安装缺失的包（on-the-fly），无需预先下载完整的宏包集合。latexmk 是 LaTeX 的项目管理器（类似 `make`），自动处理多次编译和交叉引用，MiKTeX 已内置 latexmk 但需要 Perl 运行环境。
+
+核心思路：**MiKTeX + Strawberry Perl + VSCode LaTeX Workshop** 三者配合，实现一键编译 PDF。
+
+## When to Use
+
+* 在 Windows 上安装或配置 MiKTeX 时
+* 配置 latexmk 并安装 Strawberry Perl 时
+* 配置 VSCode LaTeX Workshop 插件的 recipe 和 tool 时
+* 使用 `miktex` 命令行管理包和仓库时
+* 解决 MiKTeX Console Qt 平台插件报错时
+* 解决 latexmk 找不到 Perl 引擎时
+* 解决 VSCode 内其他插件与 Perl 冲突时
+
 ## Common Install
 
 ### 安装 MiKTeX
@@ -143,3 +176,28 @@ Available platform plugins are: windows.
 ### 记得检查更新
 
 记得检查更新，不然可能不给你编译？`latexmk: major issue: So far, no MiKTeX administrator has checked for updates.`
+
+## Verification Checklist
+
+* [ ] **MiKTeX 已安装，texify 可用**
+
+    ```powershell
+    texify
+    # 应显示 "Missing file argument." 而非 "command not found"
+    ```
+
+* [ ] **Strawberry Perl 已安装**
+
+    ```powershell
+    perl --help
+    ```
+
+* [ ] **latexmk 可运行**
+
+    ```powershell
+    latexmk --version
+    ```
+
+* [ ] **VSCode LaTeX Workshop 可编译出 PDF**
+
+    打开任意 `.tex` 文件，运行 LaTeX Workshop 编译，确认 `pdf` 正常生成。
