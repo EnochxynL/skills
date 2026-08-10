@@ -60,6 +60,12 @@ export default defineConfig({
               { text: 'pnpm', link: '/nodejs-pnpm/skill' },
             ],
           },
+          {
+            text: 'LaTeX',
+            items: [
+              { text: 'MiKTeX', link: '/latex-miktex/skill' },
+            ],
+          },
         ],
       },
       {
