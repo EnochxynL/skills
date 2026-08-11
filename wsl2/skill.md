@@ -163,6 +163,18 @@ wsl echo "Hello from Linux"
 
 [Windows10内置Linux子系统（WSL）路径转换 - 雨水的命运 - 博客园](https://www.cnblogs.com/RainFate/p/16821186.html#_label2)
 
+### 网络适配
+
+[Networking | Docker Docs](https://docs.docker.com/desktop/features/networking/#use-cases-and-workarounds)
+
+若容器内curl显示Failed to connect to host.podman.internal port 8000: Connection refused
+
+容器内ping得host.docker.internal实际指向ip为10.255.255.254 宿主内ipconfig得Ethernet adapter vEthernet (WSL (Hyper-V firewall))的ip为172.24.0.1[How to fix WSL X11 Forwarding after Windows Update to 23H2 - Super User](https://superuser.com/questions/1846917/how-to-fix-wsl-x11-forwarding-after-windows-update-to-23h2)[Ubuntu-WSL2一键设置代理操作_10.255.255.254-CSDN博客](https://blog.csdn.net/qq_32939413/article/details/142628273)[(7 封私信) docker compose中的容器如何访问主机服务 - 知乎](https://zhuanlan.zhihu.com/p/444263754)
+
+host.docker.internal域名解析错误，或数据没有转发。手动改成正确的IP。 [Podman container on Windows cannot access host by ip or dns. Linux and Mac OS do not have this issue. · Issue #13966 · containers/podman](https://github.com/containers/podman/issues/13966)[🐳 令人头疼的 docker 代理问题，我整理了解决方法和验证方案 | 阿森毛不多](https://www.assen.top/blog/2024-10-12-docker-proxy)[Connection refused on host.docker.internal - Docker Desktop - Docker Community Forums](https://forums.docker.com/t/connection-refused-on-host-docker-internal/136925)[Connection refused on docker container - Stack Overflow](https://stackoverflow.com/questions/36813690/connection-refused-on-docker-container)[Unable to connect to host service from inside Docker container - Docker Engine / Compose - Docker Community Forums](https://forums.docker.com/t/unable-to-connect-to-host-service-from-inside-docker-container/145749/4)[docker - Podman containers refuses connections to host.containers.internal - Stack Overflow](https://stackoverflow.com/questions/79596879/podman-containers-refuses-connections-to-host-containers-internal)[macos - Why am I getting "Connection Refused" when using "host.docker.internal" to hit the host's localhost? - Super User](https://superuser.com/questions/1743261/why-am-i-getting-connection-refused-when-using-host-docker-internal-to-hit-t)
+
+以X11服务为例，把export DISPLAY=172.24.0.1:0.0即可正常转发
+
 ### 换源、基本依赖
 
 ## Common Pitfalls
