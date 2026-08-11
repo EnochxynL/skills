@@ -1,0 +1,1 @@
+[如何在 Ubuntu 和其它的 Linux 发行版安装 Rust 和 Cargo | Linux 中国 - 知乎](https://zhuanlan.zhihu.com/p/427766653)
