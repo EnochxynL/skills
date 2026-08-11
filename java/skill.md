@@ -1,4 +1,4 @@
-# 运行环境、编译环境：JDK
+# Java
 
 ## Overview
 
@@ -32,13 +32,17 @@ Maven Deamon：类比mamba和conda的关系，Maven Deamon是Maven的加速版
 
 Maven 没有安装包，只有直接解压的便携式可执行包。将下载好的解压到自己设置的目录中（路径中不要有中文等影响环境的字符）
 
-官方文档推荐：对于 scoop 可以 `scoop install maven`。Maven Daemon 同理，`scoop install mvndaemon` 即可。包管理器会自动完成安装，并将Maven的`bin`目录添加到`PATH`，让系统能找到`mvn`命令。
+官方文档推荐：对于 scoop 可以 `scoop install maven`。Maven Daemon 同理，`scoop install mvndaemon` 即可。实际上我安装的是 Maven Daemon。
+
+包管理器会自动完成安装，并将Maven的`bin`目录添加到`PATH`，让系统能找到`mvn`命令。我的 scoop 添加了`C:\Users\enoch\scoop\apps\mvndaemon\current\bin`进入用户 `PATH`。
 
 在 Maven 3.x 版本中，`MAVEN_HOME`或`M2_HOME`环境变量已不再是强制要求：
 
 > As of maven 3.5.0 neither of these environment variables should be specified. Instead, the `path` should be updated to include the `mvn` executable.
 
 ### Gradle 安装
+
+scoop 也可以 `scoop install gradle`，并且设置 `GRADLE_USER_HOME`，例如我的电脑上是 `C:\Users\enoch\scoop\apps\gradle\current\.gradle`。可执行文件和其他应用程序一样，统一在 `C:\Users\enoch\scoop\shims`。
 
 ## Optional Configure
 
@@ -48,7 +52,7 @@ Maven 没有安装包，只有直接解压的便携式可执行包。将下载�
 
 [修改 Maven Wrapper 的默认下载位置 - 知乎](https://zhuanlan.zhihu.com/p/427984150)
 
-Maven Wrapper 相当于Maven的虚拟环境。目前没咋使用所以先不写教程。
+Maven Wrapper 相当于 Maven 的虚拟环境。目前没咋使用所以先不写教程。
 
 ### Oracle Java VSCode 插件
 
@@ -81,5 +85,3 @@ Maven Wrapper 相当于Maven的虚拟环境。目前没咋使用所以先不写�
 [Maven 构建 Java 项目 | 菜鸟教程](https://www.runoob.com/maven/maven-creating-project.html)
 
 [Maven Getting Started Guide – Maven](https://maven.apache.org/guides/getting-started/)
-
-# 插件
