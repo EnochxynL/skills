@@ -66,6 +66,8 @@ Maven 没有安装包，只有直接解压的便携式可执行包。将下载�
 
 ### Gradle 安装
 
+[我的世界开发者中文指南 | MinecraftDeveloperGuide](https://mouse0w0.github.io/MinecraftDeveloperGuide/)
+
 scoop 也可以 `scoop install gradle`，并且设置 `GRADLE_USER_HOME`，例如我的电脑上是 `C:\Users\enoch\scoop\apps\gradle\current\.gradle`。可执行文件和其他应用程序一样，统一在 `C:\Users\enoch\scoop\shims`。
 
 ## Optional Configure
