@@ -242,6 +242,10 @@ kwriteconfig5 --file plasma-localerc --group Translations --key LANGUAGE zh_CN:e
 systemsettings5 kcm_desktoppaths
 ```
 
+### KDE 开始菜单收藏夹
+
+[找回消失的 KDE 开始菜单收藏夹 | 水景一页](https://cnzhx.net/blog/recover-favorites-in-kde-application-menu/)
+
 ### KDE 触控板设置
 
 ```bash
@@ -254,6 +258,17 @@ systemsettings5 kcm_touchpad
 ```bash
 sudo apt install --no-install-recommends pcmanfm-qt # --no-install-recommends 防止把整个 lxqt 安装。可用 nala 替代命令。
 ```
+
+### 手机传文件
+
+- 有线连接，dolphin一直存在bug，而pcmanfm好像也有bug。强烈推荐pcmanfm-qt。
+- 无线连接，可以用LocalSend，免费开源，可以捐赠。OpenDrop需要奇怪的依赖，没那么好用。
+
+### 磁盘分析器
+
+[适用于 Linux 系统的 10 个最佳磁盘分析工具](https://cn.linux-terminal.com/?p=1376)
+
+[3 个适用于 Linux 的开源 GUI 磁盘使用分析器](https://cn.console-linux.com/?p=32179)
 
 ### TLPUI
 
@@ -289,6 +304,42 @@ onedrive --display-config
 * ROS2源：[Ros2 | 镜像站使用帮助 | 清华大学开源软件镜像站 | Tsinghua Open Source Mirror](https://mirror.tuna.tsinghua.edu.cn/help/ros2/) [Ubuntu (deb packages) — ROS 2 Documentation: Jazzy documentation](https://docs.ros.org/en/jazzy/Installation/Ubuntu-Install-Debs.html)
 * WineHQ源：[Wine Builds | 镜像站使用帮助 | 清华大学开源软件镜像站 | Tsinghua Open Source Mirror](https://mirror.tuna.tsinghua.edu.cn/help/wine-builds/) [Debian/Ubuntu · Wiki · wine / wine · GitLab](https://gitlab.winehq.org/wine/wine/-/wikis/Debian-Ubuntu)
 * NodeSource源：[Repository Manual Installation · nodesource/distributions Wiki](https://github.com/nodesource/distributions/wiki/Repository-Manual-Installation)
+
+## Common Pitfalls
+
+[Linux 中的 "exec format error" 全面解析：原因、排查与最佳实践 — geek-blogs.com](https://geek-blogs.com/blog/exec-format-error-linux/)
+
+### 手动下载包
+
+[手动从linux镜像仓库下载安装包 - Hekk丶 - 博客园](https://www.cnblogs.com/hekk/p/18908427)
+
+观察教程得知，我们的软件源地址应该是
+
+`https://daeuniverse.pages.dev/dists/goose/honk/binary-amd64/Packages.gz`
+
+下载解压后可以发现软件清单及下载地址，例如
+
+- `https://daeuniverse.pages.dev/pool/honk/v/v2raya/v2raya_2.2.7.5_amd64.deb`
+- `https://daeuniverse.pages.dev/pool/honk/v/v2ray-rules-dat/v2ray-rules-dat_202604102231.0.0_all.deb`
+- `https://daeuniverse.pages.dev/pool/honk/x/xray/xray_26.3.27_amd64.deb`
+
+### 环境变量
+
+[深入解析 .bash_profile 与 .bashrc](https://www.mahaoliang.tech/p/%E6%B7%B1%E5%85%A5%E8%A7%A3%E6%9E%90-.bash_profile-%E4%B8%8E-.bashrc/#%E7%99%BB%E5%BD%95-shell-%E7%9A%84%E5%8A%A0%E8%BD%BD%E9%A1%BA%E5%BA%8F%E4%B8%89%E9%80%89%E4%B8%80%E7%9A%84%E8%A7%84%E5%88%99)
+
+[深入理解Linux环境配置文件：.bashrc、.bash_profile和.profile - dclogs - 博客园](https://www.cnblogs.com/dclogs/p/18667213)
+
+[如何再次还原默认的.bashrc文件？-腾讯云开发者社区-腾讯云](https://cloud.tencent.com/developer/ask/sof/116358518)
+
+系统默认的`.bashrc`文件备份位于`/etc/skel/.bashrc`，可以在你搞乱后从它还原。
+
+### 绑定串口
+
+锁串口号并同时赋权限： https://blog.csdn.net/lun55423/article/details/123184365
+
+注意区分ttyUSB和ttyACM 》》提示：赋权限指令 ：
+
+`sudo chmod 777 name`
 
 ## Verification Checklist
 
