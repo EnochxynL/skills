@@ -1,10 +1,34 @@
-# Java
+---
+name: java-maven
+description: Use when setting up or troubleshooting Java development with Maven on Windows — installing JDK, configuring Maven/Maven Daemon, installing Gradle, integrating VSCode Java plugins, and managing Maven projects.
+metadata:
+  hermes:
+    tags:
+      - java
+      - maven
+      - gradle
+      - windows
+      - jdk
+      - vscode
+---
+
+# Java Maven — JDK 与项目管理器配置
 
 ## Overview
 
-Maven：Java的包管理工具兼项目管理器，类似于vcpkg、uv、pnpm
+Maven：Java 的包管理工具兼项目管理器，类似于 vcpkg、uv、pnpm。
 
-Maven Deamon：类比mamba和conda的关系，Maven Deamon是Maven的加速版
+Maven Daemon：类比 mamba 和 conda 的关系，Maven Daemon 是 Maven 的加速版。
+
+## When to Use
+
+* 在 Windows 上安装 JDK 并配置 Java 环境时
+* 安装或配置 Maven / Maven Daemon 时
+* 安装或配置 Gradle 时
+* 配置 VSCode Java 插件（Oracle / Microsoft）时
+* 使用 Maven Wrapper 管理项目级别 Maven 版本时
+* 使用 Maven Archetype 创建项目模板时
+* 清理未使用的 Maven 依赖时
 
 ## Common Install
 
@@ -85,3 +109,27 @@ Maven Wrapper 相当于 Maven 的虚拟环境。目前没咋使用所以先不�
 [Maven 构建 Java 项目 | 菜鸟教程](https://www.runoob.com/maven/maven-creating-project.html)
 
 [Maven Getting Started Guide – Maven](https://maven.apache.org/guides/getting-started/)
+
+## Verification Checklist
+
+* [ ] **JDK 已安装，java 可用**
+
+    ```powershell
+    java --version
+    ```
+
+* [ ] **Maven / Maven Daemon 已安装**
+
+    ```powershell
+    mvn --version
+    ```
+
+* [ ] **Gradle 已安装**
+
+    ```powershell
+    gradle --version
+    ```
+
+* [ ] **VSCode 可创建并编译 Maven 项目**
+
+    在 VSCode 中使用 Maven Archetype 创建项目，确认 `mvn compile` 正常执行。

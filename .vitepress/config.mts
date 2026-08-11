@@ -61,6 +61,12 @@ export default defineConfig({
             ],
           },
           {
+            text: 'Java',
+            items: [
+              { text: 'Maven', link: '/java-maven/skill' },
+            ],
+          },
+          {
             text: 'LaTeX',
             items: [
               { text: 'MiKTeX', link: '/latex-miktex/skill' },
