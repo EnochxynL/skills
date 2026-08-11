@@ -16,6 +16,7 @@ export default defineConfig({
         text: '环境容器',
         items: [
           { text: 'Ubuntu 24.04', link: '/ubuntu/skill' },
+          { text: 'WSL2', link: '/wsl2/skill' },
           { text: 'Podman', link: '/podman/skill' },
           { text: 'Wine', link: '/wine/skill' },
         ],

@@ -1,3 +1,33 @@
+---
+name: wsl2
+description: Use when setting up or troubleshooting WSL2 on Windows — installing WSL2 and Linux distributions via command line, managing distribution instances, understanding the registry model, and resolving common WSL2 pitfalls.
+metadata:
+  hermes:
+    tags:
+      - wsl2
+      - wsl
+      - windows
+      - linux
+      - ubuntu
+---
+
+# WSL2 — Windows 上的 Linux 子系统
+
+## Overview
+
+WSL2（Windows Subsystem for Linux 2）是 Windows 内置的 Linux 兼容层，运行完整的 Linux 内核。与虚拟机不同，WSL2 与 Windows 深度集成——文件系统互通、GUI 原生支持、GPU 直通、网络共享。每个 Linux 发行版通过"注册"机制被 Windows 管理，本质是注册表项 + ext4.vhdx 虚拟磁盘的组合。
+
+核心概念：**平台与发行版分离**。WSL 平台是 Windows 的一项功能（通过 `wsl --install` 启用），发行版是注册到该平台上的实例。卸载发行版不会移除 WSL 平台本身。
+
+## When to Use
+
+* 在 Windows 上安装 WSL2 平台或注册 Linux 发行版时
+* 通过命令行安装 Ubuntu 等发行版（脱离 Microsoft Store）时
+* 管理 WSL 发行版实例（注册、注销、导出、导入）时
+* 理解 WSL2 的注册表机制和文件系统结构时
+* 卸载发行版或彻底移除 WSL 平台时
+* 配置 WSL 代理、目录映射、换源时
+* 解决 AppImage 运行、UDP 通信等 WSL2 特定问题时
 
 ## Common Install
 
@@ -144,6 +174,33 @@ wsl echo "Hello from Linux"
 
 ### UDP支持
 
+[Windows主机无法从WSL-2来宾接收UDP数据包。-腾讯云开发者社区-腾讯云](https://cloud.tencent.com/developer/ask/sof/107189745)
+
 WSL对UDP的支持不太好，默认只能单边通信！
 
-https://cloud.tencent.com/developer/ask/sof/107189745
+## Verification Checklist
+
+* [ ] **WSL 平台已安装**
+
+    ```powershell
+    wsl --version
+    ```
+
+* [ ] **发行版已注册并可进入**
+
+    ```powershell
+    wsl --list --verbose
+    wsl
+    ```
+
+* [ ] **GUI 应用支持正常**
+
+    ```bash
+    nautilus --version
+    ```
+
+* [ ] **GPU 直通可用**
+
+    ```bash
+    nvidia-smi
+    ```
