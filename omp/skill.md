@@ -106,3 +106,5 @@ omp 从以下位置读取 `mcp.json`，按优先级排序：
 > A plugin bundles extension surfaces — skills, commands, hooks, custom tools, MCP servers, themes — into one installable unit. Pull from npm, a Git repo, a local path, or a marketplace catalog.
 
 这点和 hermes 的插件定义略有不同。
+
+omp 通过 `pkg.pi` fallback + legacy shim 保住了 pi 扩展的"加载路径"，但少数 API 有改名/替换，需要小改才能跑，不是 drop-in 无缝。
