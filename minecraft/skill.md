@@ -1,0 +1,1 @@
+[Serilum/Alternative-World-Save-Location: 📍 Allows changing the default save file path of Minecraft worlds to outside instance scopes.](https://github.com/Serilum/Alternative-World-Save-Location)
