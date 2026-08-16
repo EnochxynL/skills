@@ -164,11 +164,11 @@ skills:
 
 | 来源  | 路径  | 使用场景 |
 | --- | --- | --- |
-| 内置  | `<repo>/plugins/` | 随 Hermes 附带 — 参见 [Built-in Plugins](/docs/zh-Hans/user-guide/features/built-in-plugins) |
+| 内置  | `<repo>/plugins/` | 随 Hermes 附带 — 参见 [Built-in Plugins](https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/features/built-in-plugins) |
 | 用户  | `~/.hermes/plugins/` | 个人插件 |
 | 项目  | `.hermes/plugins/` | 项目专属插件（需要 `HERMES_ENABLE_PROJECT_PLUGINS=true`） |
 | pip | `hermes_agent.plugins` entry_points | 分发包 |
-| Nix | `services.hermes-agent.extraPlugins` / `extraPythonPackages` | NixOS 声明式安装 — 参见 [Nix Setup](/docs/zh-Hans/getting-started/nix-setup#plugins) |
+| Nix | `services.hermes-agent.extraPlugins` / `extraPythonPackages` | NixOS 声明式安装 — 参见 [Nix Setup](https://hermes-agent.nousresearch.com/docs/zh-Hans/getting-started/nix-setup#plugins) |
 
 名称冲突时，后面的来源会覆盖前面的，因此与内置插件同名的用户插件会替换它。
 
