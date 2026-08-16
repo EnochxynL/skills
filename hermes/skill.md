@@ -22,7 +22,7 @@ Hermes 是 Nous Research 出品的全局 AI Agent，负责跨项目的 agent 调
 * 安装、更新 Hermes Desktop 时
 * 配置供应商端点或切换 API provider 时
 * 集成 Claude Code / CodeX 作为项目级 agent 时
-* 使用 CC Switch 管理配置文件、MCP、Skill 时
+* 管理配置文件、MCP、Skill 时
 * 管理对话记录与迁移时
 
 ## Common Install
@@ -48,7 +48,7 @@ curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
 hermes desktop
 ```
 
-Windows 下建议使用 exe 安装，`hermes desktop` 命令不一定自动创建快捷方式。Hermes Desktop 的可执行文件在 `C:\Users\enoch\AppData\Local\hermes\hermes-agent\apps\desktop\release\win-unpacked\Hermes.exe`，或许也可以根据它手动创建快捷方式，因为安装器并不创建卸载入口。
+Windows 下建议使用 exe 安装，`hermes desktop` 命令不一定自动创建快捷方式。Hermes Desktop 的可执行文件在 `%LOCALAPPDATA%\hermes\hermes-agent\apps\desktop\release\win-unpacked\Hermes.exe`，或许也可以根据它手动创建快捷方式，因为安装器并不创建卸载入口。
 
 ### 环境配置
 
@@ -129,7 +129,11 @@ Hermes 不像 Claude Code/CodeX 那样有完善的联网配置，需要指定 We
 
 ### MCP 管理
 
+[在Windows11上配置MCP服务（Cline, Cherry Studio适用） - 知乎](https://zhuanlan.zhihu.com/p/1890083086923978026)
+
 使用 Hermes Dashboard 可以轻松可视化管理 MCP。
+
+MCP 依托于网络应用（https）、可执行文件或脚本（stdio）运行，所以“安装MCP”本质上是安装应用程序，并在 Agent 的列表登记 MCP 的启动命令
 
 ### Skill 管理
 
