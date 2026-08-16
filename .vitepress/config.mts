@@ -86,6 +86,7 @@ export default defineConfig({
         text: '项目管理',
         items: [
           { text: 'Hermes', link: '/hermes/skill' },
+          { text: 'omp', link: '/omp/skill' },
           { text: 'WandB', link: '/wandb/skill' },
           { text: 'v2rayA', link: '/v2raya/skill' },
         ],
