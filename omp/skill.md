@@ -14,7 +14,9 @@ metadata:
 
 ## Overview
 
-Enoch 手动安装并配置 omp 的一手经验总结。omp 是 can1357 基于 pi-mono fork 的终端 coding agent，内置 LSP/DAP/ast_edit 等 IDE 级深度工具。本 skill 覆盖从安装到全局管理的完整链路。
+omp（Oh My Pi）是 can1357 基于 Mario Zechner 的 pi-mono 深度 fork 的终端 coding agent，定位是"把 IDE 焊死在终端里"：约 8 万行 Rust 核心内建 31 个工具、14 种 LSP 操作、28 种 DAP 调试操作，以及 hash-anchored（ast_edit）结构化编辑，让 agent 拥有 IDE 级的代码感知与调试深度，而不是"读文件 + 撒 print"。
+
+它的核心特质：模型无关（60+ provider，不绑定任何一家）；继承 pi 的扩展系统与包生态（pi 插件经 `pkg.pi` fallback + legacy shim 兼容，非无缝）；保留树状会话（`/tree` 从任意节点继续）；folder-local 记忆（mnemopi + Hindsight，默认关闭、opt-in）——因此天然适合做"专注单个文件夹、默认不串味"的项目管家；工具可裁剪（`--tools` 白名单）；MIT 开源，可 fork 掌控核心。
 
 ## When to Use
 
