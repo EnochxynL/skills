@@ -156,6 +156,50 @@ LaTeX Workshop 插件直接安装使用，我找了IEEE TAC的模板打开。啥
 
 ## Common Pitfalls
 
+### XeLaTeX中文支持
+
+[LaTex支持中文的三种方式_latex可以写中文吗-CSDN博客](https://blog.csdn.net/z_feng12489/article/details/90449495)
+
+[中文宏包CJK、xeCJK、luatexja、ctex的区别和联系以及UTF-8编码的定义和在编译中的重要性_cjk和xecjk-CSDN博客](https://blog.csdn.net/weixin_45008608/article/details/115837858)
+
+[Latex overleaf 英文模板如何支持中文_overleaf支持中文-CSDN博客](https://blog.csdn.net/qazwsxrx/article/details/111604175)
+
+[.tex文件中不支持中文内容+CTeX fontset `fandol‘ is unavailable... - 代码先锋网](https://www.codeleading.com/article/91135563043/)
+
+[OverLeaf：CTeX fontset 'fandol' is unavailable in current - Paul—Huang - 博客园](https://www.cnblogs.com/Paul-Huang/articles/15787118.html)
+
+[Undefined control sequence error in loading xeCJK with xelatex-dev · Issue #707 · CTeX-org/ctex-kit](https://github.com/CTeX-org/ctex-kit/issues/707)
+
+[latex报错：Undefined control sequence.解决办法-CSDN博客](https://blog.csdn.net/qlkaicx/article/details/136402882)
+
+### pdfLaTeX中文支持
+
+[Latex overleaf 英文模板如何支持中文_overleaf支持中文-CSDN博客](https://blog.csdn.net/qazwsxrx/article/details/111604175)  
+[polyglossia - critical package ctex error:ctex fontset"fandol" is unavailable in current - TeX - LaTeX Stack Exchange](https://tex.stackexchange.com/questions/545681/critical-package-ctex-errorctex-fontsetfandol-is-unavailable-in-current/545698#545698)  
+[【已解决】latex中文编译 - 技术交流与探讨 / 应用程序与桌面环境 - Arch Linux 中文论坛](https://forum.archlinuxcn.org/t/topic/12153)  
+[LaTeX 中文字体配置基础指南 - 知乎](https://zhuanlan.zhihu.com/p/538459335)  
+[fonts - How to install correctly simhei.ttf and simsun.ttc for pdflatex on TEX Live 2013 - TeX - LaTeX Stack Exchange](https://tex.stackexchange.com/questions/168732/how-to-install-correctly-simhei-ttf-and-simsun-ttc-for-pdflatex-on-tex-live-2013)  
+[【LaTex编译遇到问题】!pdfTeX error: pdflatex (file simhei.ttf): cannot open TrueType font file for reading-CSDN博客](https://blog.csdn.net/Ryan0828/article/details/125559922)
+
+[LaTex支持中文的三种方式_latex可以写中文吗-CSDN博客](https://blog.csdn.net/z_feng12489/article/details/90449495)  
+[LaTex支持中文的三种方式（首推第一种） - 楚千羽 - 博客园](https://www.cnblogs.com/chuqianyu/p/14620014.html)
+
+有时候CTEX一些部分怎么都无法实现中文显示（如`\maketitle`），这时候不妨想想CJKutf8
+
+```latex
+\usepackage{CJKutf8}
+\begin{CJK}{UTF8}{gbsn}
+\title{论文标题} 
+\date{} %不显示日期
+\end{CJK}
+% 下面继续使用CTEX
+```
+
+### markdown 支持
+
+[使用markdown宏包为LaTeX编辑文本，把markdown语句转化为LaTeX语句（vscode）_markdown转latex-CSDN博客](https://blog.csdn.net/Log_not_log/article/details/127566952)
+[以 Markdown 撰写文稿，以 LaTeX 排版 | 始终](https://liam.page/2020/03/30/writing-manuscript-in-Markdown-and-typesetting-with-LaTeX/)
+
 ### No Qt platform plugin
 
 [解决miktex更新后无法打开：this application failed to start because no QT......-CSDN博客](https://blog.csdn.net/weixin_52455619/article/details/138384953)
