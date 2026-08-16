@@ -102,31 +102,6 @@ Hermes 不像 Claude Code/CodeX 那样有完善的联网配置，需要指定 We
 
 ## Global Manage
 
-### 工具管理
-
-[工具与工具集 | Hermes Agent](https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/features/tools)
-[工具集参考 | Hermes Agent](https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/toolsets-reference)
-
-工具可以来自：内置、MCP、插件。
-
-### 插件管理
-
-[Plugins | Hermes Agent](https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/features/plugins#%E6%8F%92%E4%BB%B6%E8%83%BD%E5%81%9A%E4%BB%80%E4%B9%88)
-
-在我看来，插件负责那些“Agent 理应具备，或者其他 Agent 已然具备，但 Hermes 缺乏”的功能。如果所有 Agent 都不具备的功能，可以通过 MCP 或 skill 来实现，接口更加通用。
-
-| 来源  | 路径  | 使用场景 |
-| --- | --- | --- |
-| 内置  | `<repo>/plugins/` | 随 Hermes 附带 — 参见 [Built-in Plugins](/docs/zh-Hans/user-guide/features/built-in-plugins) |
-| 用户  | `~/.hermes/plugins/` | 个人插件 |
-| 项目  | `.hermes/plugins/` | 项目专属插件（需要 `HERMES_ENABLE_PROJECT_PLUGINS=true`） |
-| pip | `hermes_agent.plugins` entry_points | 分发包 |
-| Nix | `services.hermes-agent.extraPlugins` / `extraPythonPackages` | NixOS 声明式安装 — 参见 [Nix Setup](/docs/zh-Hans/getting-started/nix-setup#plugins) |
-
-名称冲突时，后面的来源会覆盖前面的，因此与内置插件同名的用户插件会替换它。
-
-那些“内置工具集”的来源本质就是内置插件，例如 `<repo>\plugins\web\exa`。
-
 ### MCP 管理
 
 [在Windows11上配置MCP服务（Cline, Cherry Studio适用） - 知乎](https://zhuanlan.zhihu.com/p/1890083086923978026)
@@ -142,8 +117,6 @@ MCP 依托于网络应用（https）、可执行文件或脚本（stdio）运行
 [Open Skills - Discover Awesome Agent Skills](https://openskills.cc/)
 [内置技能目录 | Hermes Agent](https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/skills-catalog)
 [Skills 系统 | Hermes Agent](https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/features/skills)
-
-#### 存放位置
 
 所有 skills 存放在 `~/.hermes/skills/` 中。全新安装时，捆绑的 skills 会从仓库复制过来（Hermes 在执行 `hermes update` 时也会同步内置技能，但同步清单会尊重本地删除和用户编辑）。通过 Hub 安装和 agent 创建的 skills 也存放在此处。agent 可以修改或删除任何 skill。
 
@@ -177,34 +150,29 @@ skills:
 
 所有四个 skills 都出现在你的 skill 索引中。如果你在本地创建一个名为 `my-custom-workflow` 的新 skill，它会遮蔽外部版本。
 
-#### skill 管理器
+从在线注册表、`skills.sh`、直接的知名 skill 端点以及官方可选 skills 中浏览、搜索、安装和管理 skills，使用 `hermes skills` 命令。
 
-从在线注册表、`skills.sh`、直接的知名 skill 端点以及官方可选 skills 中浏览、搜索、安装和管理 skills：
+当然，也可以用 `npx skills` 这样的第三方工具。它应该会自动发现 hermes 配置文件夹并放入文件。
 
-```bash
-hermes skills browse                              # Browse all hub skills (official first)
-hermes skills browse --source official            # Browse only official optional skills
-hermes skills search kubernetes                   # Search all sources
-hermes skills search react --source skills-sh     # Search the skills.sh directory
-hermes skills search https://mintlify.com/docs --source well-known
-hermes skills inspect openai/skills/k8s           # Preview before installing
-hermes skills install openai/skills/k8s           # Install with security scan
-hermes skills install official/security/1password
-hermes skills install skills-sh/vercel-labs/json-render/json-render-react --force
-hermes skills install well-known:https://mintlify.com/docs/.well-known/skills/mintlify
-hermes skills install https://sharethis.chat/SKILL.md              # 直接 URL（含引用的支持文件）
-hermes skills install https://example.com/SKILL.md --name my-skill # Override name when frontmatter has none
-hermes skills list --source hub                   # List hub-installed skills
-hermes skills check                               # Check installed hub skills for upstream updates
-hermes skills update                              # Reinstall hub skills with upstream changes when needed
-hermes skills audit                               # Re-scan all hub skills for security
-hermes skills uninstall k8s                       # Remove a hub skill
-hermes skills reset google-workspace              # Un-stick a bundled skill from "user-modified" (see below)
-hermes skills reset google-workspace --restore    # Also restore the bundled version, deleting your local edits
-hermes skills publish skills/my-skill --to github --repo owner/repo
-hermes skills snapshot export setup.json          # Export skill config
-hermes skills tap add myorg/skills-repo           # Add a custom GitHub source
-```
+### 插件管理
+
+[Plugins | Hermes Agent](https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/features/plugins#%E6%8F%92%E4%BB%B6%E8%83%BD%E5%81%9A%E4%BB%80%E4%B9%88)
+[工具与工具集 | Hermes Agent](https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/features/tools)
+[工具集参考 | Hermes Agent](https://hermes-agent.nousresearch.com/docs/zh-Hans/reference/toolsets-reference)
+
+在我看来，插件负责那些“Agent 理应具备，或者其他 Agent 已然具备，但 Hermes 缺乏”的功能。如果所有 Agent 都不具备的功能，可以通过 MCP 或 skill 来实现，接口更加通用。
+
+| 来源  | 路径  | 使用场景 |
+| --- | --- | --- |
+| 内置  | `<repo>/plugins/` | 随 Hermes 附带 — 参见 [Built-in Plugins](/docs/zh-Hans/user-guide/features/built-in-plugins) |
+| 用户  | `~/.hermes/plugins/` | 个人插件 |
+| 项目  | `.hermes/plugins/` | 项目专属插件（需要 `HERMES_ENABLE_PROJECT_PLUGINS=true`） |
+| pip | `hermes_agent.plugins` entry_points | 分发包 |
+| Nix | `services.hermes-agent.extraPlugins` / `extraPythonPackages` | NixOS 声明式安装 — 参见 [Nix Setup](/docs/zh-Hans/getting-started/nix-setup#plugins) |
+
+名称冲突时，后面的来源会覆盖前面的，因此与内置插件同名的用户插件会替换它。
+
+工具可以来自：内置、MCP、插件。那些“内置工具集”的来源本质就是内置插件，例如 `<repo>\plugins\web\exa`。
 
 ### 其他 Agent 管理
 

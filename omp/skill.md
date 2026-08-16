@@ -72,10 +72,37 @@ ANTHROPIC_SEARCH_MODEL=deepseek-v4-flash
 
 ## Global Manage
 
-### 工具管理
+### MCP 管理
+
+omp 从以下位置读取 `mcp.json`，按优先级排序：
+
+1. `.omp/mcp.json` — 项目，omp 管理
+2. `~/.omp/agent/mcp.json` — 用户，omp 管理
+3. 仓库根目录的 `mcp.json` 或 `.mcp.json` — 独立备用
+4. `.claude/`、`.cursor/`、`.vscode/`、`.gemini/`、`.windsurf/`、`opencode.json` — 自动发现
+
+项目条目会遮蔽具有相同键的用户条目。通过将服务器的键添加到 `disabledServers` 来禁用服务器而不删除其配置。
+
+### Skill 管理
+
+发现路径如下
+
+```
+~/.omp/agent/skills/<name>/SKILL.md     # 全局
+.omp/skills/<name>/SKILL.md             # 项目
+~/.claude/skills/, .claude/skills/      # 同样被发现
+~/.codex/skills/,  .codex/skills/       # 同样被发现
+```
+
+发现是非递归的——每个目录一个 Skill，直接位于 `skills/` 下。Skill 目录内的同级文件可以通过 `skill://<name>/path/to/file.md` 从模型中引用。
 
 ### 插件管理
 
-### MCP 管理
+[oh-my-pi/docs/extensions.md at main · can1357/oh-my-pi](https://github.com/can1357/oh-my-pi/blob/main/docs/extensions.md)
+[oh-my-pi/docs/porting-from-pi-mono.md at main · can1357/oh-my-pi](https://github.com/can1357/oh-my-pi/blob/main/docs/porting-from-pi-mono.md)
+[omp — a coding agent with the IDE wired in](https://omp.sh/docs/plugins)
+[扩展编写 | Oh My Pi 中文文档](https://aieguu.github.io/omp-docs-cn/guide/extension-authoring)
 
-### Skill 管理
+> A plugin bundles extension surfaces — skills, commands, hooks, custom tools, MCP servers, themes — into one installable unit. Pull from npm, a Git repo, a local path, or a marketplace catalog.
+
+这点和 hermes 的插件定义略有不同。
