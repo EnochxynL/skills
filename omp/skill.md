@@ -1,3 +1,28 @@
+---
+name: omp
+description: Use when 安装或配置 omp（Oh My Pi）终端 coding agent——从零安装、环境变量分层、LLM API 与模型角色、DeepSeek Web Search 伪装、MCP/Skill/插件管理。
+version: 0.1.0
+author: Enoch
+license: MIT
+metadata:
+  hermes:
+    tags: [omp, oh-my-pi, coding-agent, install, config]
+    related_skills: []
+---
+
+# Oh My Pi — 项目 AI Agent 配置与集成
+
+## Overview
+
+Enoch 手动安装并配置 omp 的一手经验总结。omp 是 can1357 基于 pi-mono fork 的终端 coding agent，内置 LSP/DAP/ast_edit 等 IDE 级深度工具。本 skill 覆盖从安装到全局管理的完整链路。
+
+## When to Use
+
+- 从零安装 omp（Windows / macOS / Linux）
+- 配置环境变量分层（.env 链）与 LLM API / 模型角色
+- 配置 DeepSeek 伪装 Anthropic Web Search
+- 管理 MCP 服务器、Skill、插件
+- 排查 omp 的配置/发现优先级问题
 
 ## Common Install
 
@@ -56,7 +81,7 @@ omp --model "DeepSeek-V4-Flash" --slow "gpt-5.6-sol" --smol "gpt-5.4-mini"
 > The DeepSeek API natively supports the Web Search feature in Claude Code. 
 
 配套的 Anthropic 兼容表里，消息字段 `type = "web_search_tool_result"` 和 `type = "server_tool_use"` 都是 Supported——这就是
-Anthropic 服务端搜索工具的回包格式。想用 DeepSeek “伪装” Anthropic 的 Web Search 功能，直接在 `.env` 里配置：
+Anthropic 服务端搜索工具的回包格式。想用 DeepSeek "伪装" Anthropic 的 Web Search 功能，直接在 `.env` 里配置：
 
 ```
 ANTHROPIC_SEARCH_API_KEY=<你的DeepSeek key>
@@ -108,3 +133,15 @@ omp 从以下位置读取 `mcp.json`，按优先级排序：
 这点和 hermes 的插件定义略有不同。
 
 omp 通过 `pkg.pi` fallback + legacy shim 保住了 pi 扩展的"加载路径"，但少数 API 有改名/替换，需要小改才能跑，不是 drop-in 无缝。
+
+## Common Pitfalls
+
+## Verification Checklist
+
+- [ ] `omp` 能进入交互界面（安装成功）
+- [ ] LLM API 已配好（`.env` 或 `/login`），`omp --model <m>` 可切换模型
+- [ ] 模型角色路由生效（`--smol`/`--slow`/`--plan`）
+- [ ] 所需 env key（如 `ANTHROPIC_SEARCH_*`）在正确层级且唯一
+- [ ] MCP 服务器被 omp 发现（`mcp.json` 或自动发现路径）
+- [ ] Skill 被 omp 发现（`~/.omp/agent/skills/` 或项目 `.omp/skills/`）
+- [ ] 插件能安装并 `/reload-plugins` 生效
