@@ -109,6 +109,8 @@ Hermes 不像 Claude Code/CodeX 那样有完善的联网配置，需要指定 We
 
 在 ACP 中，hermes 有意排除了不适合典型编辑器 UX 的功能，例如消息投递和 cronjob 管理。底层 AIAgent 仍使用 Hermes 的正常持久化/日志路径，但 ACP 的 `list/load/resume/fork` 仅限于当前运行的 ACP 服务器进程。
 
+但是用 ACP 容易出现终端找不到程序、无法复制会话内容等问题。
+
 ### Paseo 适配
 
 [Paseo – Run Claude Code, Codex, Copilot, OpenCode from anywhere](https://paseo.sh/)

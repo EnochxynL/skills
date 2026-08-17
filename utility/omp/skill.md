@@ -104,12 +104,20 @@ ANTHROPIC_SEARCH_MODEL=deepseek-v4-flash
 
 在 VSCode ACP Client 添加一项就行，命令为 `omp`，参数为 `acp`。
 
+但是用 ACP 容易出现终端找不到程序、无法复制会话内容等问题。
+
 ### Paseo 适配
 
 [Paseo – Run Claude Code, Codex, Copilot, OpenCode from anywhere](https://paseo.sh/)
 [Paseo (Unofficial) - Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=hinnes.paseo-vscode)
 
 Paseo 是一款支持多种 Agent 的 GUI 前端。它会自动发现 omp 的可执行文件位置，以及配置文件位置。
+
+### VSCode 适配
+
+[Pendant - Pi Agent for VS Code - Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=cdervis.vscode-pi)
+
+这个插件支持自带的 pi、系统安装的 pi、系统安装的 omp。
 
 ## Global Manage
 
