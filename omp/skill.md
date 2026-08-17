@@ -97,6 +97,20 @@ ANTHROPIC_SEARCH_MODEL=deepseek-v4-flash
 
 ## Optional Configure
 
+### ACP 适配
+
+[ACP | Oh My Pi 中文文档](https://aieguu.github.io/omp-docs-cn/guide/acp)
+[ACP Client - Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=formulahendry.acp-client)
+
+在 VSCode ACP Client 添加一项就行，命令为 `omp`，参数为 `acp`。
+
+### Paseo 适配
+
+[Paseo – Run Claude Code, Codex, Copilot, OpenCode from anywhere](https://paseo.sh/)
+[Paseo (Unofficial) - Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=hinnes.paseo-vscode)
+
+Paseo 是一款支持多种 Agent 的 GUI 前端。它会自动发现 omp 的可执行文件位置，以及配置文件位置。
+
 ## Global Manage
 
 ### MCP 管理

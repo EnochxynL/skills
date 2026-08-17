@@ -37,8 +37,6 @@ Hermes Desktop 目前发现有三个版本：
 | 中文社区 | [Hermes Agent 中文社区桌面版](https://desktop.hermesagent.org.cn/#download) | 功能完善，但官方版已够用 |
 | 第三方 | [fathah/hermes-desktop](https://github.com/fathah/hermes-desktop) | 已改名 Hermes One，Ubuntu 24.04 上 AppImage 无法启动，不推荐 |
 
-#### 官方版本
-
 [Hermes Agent | Nous Research](https://hermes-agent.nousresearch.com/)
 
 官方 Windows exe 安装包本质是下载 `install.ps1` 安装脚本，不是传统安装包。Linux 下可直接用 curl 安装：
@@ -99,6 +97,24 @@ Hermes 不像 Claude Code/CodeX 那样有完善的联网配置，需要指定 We
 - 还有一些 MCP 和 skill 可以试试看，可能有惊喜呢……
 
 ## Optional Configure
+
+### ACP 适配
+
+[快速入门 | Hermes Agent](https://hermes-agent.nousresearch.com/docs/zh-Hans/getting-started/quickstart#%E7%BC%96%E8%BE%91%E5%99%A8%E9%9B%86%E6%88%90acp)
+[ACP 宿主集成 | Hermes Agent](https://hermes-agent.nousresearch.com/docs/zh-Hans/user-guide/features/acp)
+[ACP Client - Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=formulahendry.acp-client)
+[Multicoder ACP - One UI for every agent - Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=multicoder.multicoder)
+
+在 VSCode 使用 ACP 对接 hermes。ACP 支持已包含在标准 `[all]` 扩展中，也就是 `hermes acp` 可以直接用。（如果安装时未包含 `[all]`，请先运行 `cd ~/.hermes/hermes-agent && uv pip install -e ".[acp]"`。）
+
+在 ACP 中，hermes 有意排除了不适合典型编辑器 UX 的功能，例如消息投递和 cronjob 管理。底层 AIAgent 仍使用 Hermes 的正常持久化/日志路径，但 ACP 的 `list/load/resume/fork` 仅限于当前运行的 ACP 服务器进程。
+
+### Paseo 适配
+
+[Paseo – Run Claude Code, Codex, Copilot, OpenCode from anywhere](https://paseo.sh/)
+[Paseo (Unofficial) - Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=hinnes.paseo-vscode)
+
+Paseo 是一款支持多种 Agent 的 GUI 前端。它会自动发现 hermes 的可执行文件位置，以及配置文件位置。
 
 ## Global Manage
 
