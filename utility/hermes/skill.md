@@ -63,6 +63,9 @@ uv pip install --python ./venv/bin/python markdownify
 
 ### LLM API 配置
 
+[大模型服务平台百炼控制台](https://bailian.console.aliyun.com/cn-beijing#/home)
+[首页-开发者工作台-API管理与控制台-千问AI平台](https://platform.qianwenai.com/home)
+
 `hermes model` 通过交互方式选择模型。
 
 使用 `cc-switch` 添加 Custom Endpoint 配置。注意：Hermes 已内置各供应商官方配置，`cc-switch` 在此用于 Custom Endpoint，与 Claude Code 和 CodeX 中用法不同。

@@ -116,8 +116,7 @@ Paseo 是一款支持多种 Agent 的 GUI 前端。它会自动发现 omp 的可
 ### VSCode 适配
 
 [Pendant - Pi Agent for VS Code - Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=cdervis.vscode-pi)
-
-这个插件支持自带的 pi、系统安装的 pi、系统安装的 omp。
+[Pi Agent Sidebar - Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=dairycode.pi-sidebar)
 
 ## Global Manage
 

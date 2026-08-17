@@ -8,7 +8,7 @@ metadata:
   related_skills: []
 ---
 
-# Node.js / pnpm — 包管理与项目管理
+# Node.js (pnpm) — 包管理与项目管理
 
 ## Overview
 
