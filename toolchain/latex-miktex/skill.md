@@ -95,11 +95,83 @@ C:\Strawberry\perl\bin
 
 ## Optional Configure
 
+### 中文支持
+
+[中文宏包CJK、xeCJK、luatexja、ctex的区别和联系以及UTF-8编码的定义和在编译中的重要性_cjk和xecjk-CSDN博客](https://blog.csdn.net/weixin_45008608/article/details/115837858)
+
+下面对支持中文的宏包作出介绍：
+
+- `CJK`宏包对中文字体的支持比较麻烦，已经不再推荐使用。
+- `xeCJK`以及`luatexja`宏包在`CJK`基础上封装了对汉字排版细节的处理功能。
+- `ctex`宏包和文档类进一步封装了`CJK`、`xeCJK`、`luatexja`等宏包，使得用户在排版中文时不再考虑排版引擎等细节。
+
+[LaTex支持中文的三种方式_latex可以写中文吗-CSDN博客](https://blog.csdn.net/z_feng12489/article/details/90449495)
+
+[LaTex支持中文的三种方式（首推第一种） - 楚千羽 - 博客园](https://www.cnblogs.com/chuqianyu/p/14620014.html)
+
+[Latex overleaf 英文模板如何支持中文_overleaf支持中文-CSDN博客](https://blog.csdn.net/qazwsxrx/article/details/111604175)
+
+1. 对于 XeLaTeX，原生的支持 Unicode，并默认其输入文件为 utf-8 编码，可以在不进行额外配置的情况下直接使用操作系统中安装的字体。直接使用 `ctex` 宏包可以解决大多数问题。
+  
+    ```latex
+    \usepackage{ctex}
+    ```
+
+2. 对于 pdfLaTeX，原生不支持 Unicode，要在导言区指定编码和字体。
+
+    ```latex
+    \usepackage[UTF8]{ctex}
+    \usepackage[UTF8,fontset=windows]{ctex} % 这里指定了其他的字体，规避字体缺失报错
+    ```
+
+3. 有时候 `ctex` 一些部分怎么都无法实现中文显示（如`\maketitle`），这时候不妨想想 `CJKutf8` 宏包。
+
+    ```latex
+    \usepackage{CJKutf8}
+    \begin{CJK}{UTF8}{gbsn}
+    \title{论文标题} 
+    \date{} % 不显示日期
+    \end{CJK}
+    % 下面继续使用CTEX
+    ```
+
+[.tex文件中不支持中文内容+CTeX fontset `fandol‘ is unavailable... - 代码先锋网](https://www.codeleading.com/article/91135563043/)
+
+[OverLeaf：CTeX fontset 'fandol' is unavailable in current - Paul—Huang - 博客园](https://www.cnblogs.com/Paul-Huang/articles/15787118.html)
+
+[polyglossia - critical package ctex error:ctex fontset"fandol" is unavailable in current - TeX - LaTeX Stack Exchange](https://tex.stackexchange.com/questions/545681/critical-package-ctex-errorctex-fontsetfandol-is-unavailable-in-current/545698#545698)  
+
+[【已解决】latex中文编译 - 技术交流与探讨 / 应用程序与桌面环境 - Arch Linux 中文论坛](https://forum.archlinuxcn.org/t/topic/12153)  
+
+[LaTeX 中文字体配置基础指南 - 知乎](https://zhuanlan.zhihu.com/p/538459335)  
+
+[fonts - How to install correctly simhei.ttf and simsun.ttc for pdflatex on TEX Live 2013 - TeX - LaTeX Stack Exchange](https://tex.stackexchange.com/questions/168732/how-to-install-correctly-simhei-ttf-and-simsun-ttc-for-pdflatex-on-tex-live-2013)  
+
+[【LaTex编译遇到问题】!pdfTeX error: pdflatex (file simhei.ttf): cannot open TrueType font file for reading-CSDN博客](https://blog.csdn.net/Ryan0828/article/details/125559922)
+
+编译时可能会碰到缺字体的报错，这时候指定其他字体，或者把缺失的字体拷贝就行
+
+```latex
+% 宏包选项
+\usepackage[fontset=founder]{ctex} 
+```
+
+或
+
+```latex
+% 文档类选项
+\documentclass[fontset=founder]{ctex}
+```
+
 ### VSCode 插件适配
 
 [[bug] 内置Perl版本过低，会与LaTeX 需要的版本冲突 · Issue #292 · github0null/eide](https://github.com/github0null/eide/issues/292)
 
+[IEEE-Template Selector](https://template-selector.ieee.org/secure/templateSelector/downloadTemplate?publicationTypeId=1&titleId=181&articleId=1&fileId=372)
+
 latexmk 的 Perl 会和 VSCode 内会和插件 EIDE 冲突，不过我现在主要使用 PlatformIO IDE，暂时不考虑 EIDE。
+
+LaTeX Workshop 插件直接安装使用，我找了IEEE TAC的模板打开。
 
 ## Global Manage
 
@@ -132,10 +204,6 @@ Topics:
 ## Project Manage
 
 ### VSCode 插件使用
-
-[IEEE-Template Selector](https://template-selector.ieee.org/secure/templateSelector/downloadTemplate?publicationTypeId=1&titleId=181&articleId=1&fileId=372)
-
-LaTeX Workshop 插件直接安装使用，我找了IEEE TAC的模板打开。
 
 一般是啥也不用干，无脑点运行，会自动弹出窗提示你安装依赖包（不用担心回滚，包管理器会记录包的安装时间）。几个弹窗过后，main.pdf 就出来了。如果需要自定义的编译选项和流程，请往下看。
 
@@ -199,44 +267,9 @@ VSCode 插件，默认没有 `latex-workshop.latex.recipe.default` 配置，因�
 
 ## Common Pitfalls
 
-### XeLaTeX中文支持
-
-[LaTex支持中文的三种方式_latex可以写中文吗-CSDN博客](https://blog.csdn.net/z_feng12489/article/details/90449495)
-
-[中文宏包CJK、xeCJK、luatexja、ctex的区别和联系以及UTF-8编码的定义和在编译中的重要性_cjk和xecjk-CSDN博客](https://blog.csdn.net/weixin_45008608/article/details/115837858)
-
-[Latex overleaf 英文模板如何支持中文_overleaf支持中文-CSDN博客](https://blog.csdn.net/qazwsxrx/article/details/111604175)
-
-[.tex文件中不支持中文内容+CTeX fontset `fandol‘ is unavailable... - 代码先锋网](https://www.codeleading.com/article/91135563043/)
-
-[OverLeaf：CTeX fontset 'fandol' is unavailable in current - Paul—Huang - 博客园](https://www.cnblogs.com/Paul-Huang/articles/15787118.html)
-
-[Undefined control sequence error in loading xeCJK with xelatex-dev · Issue #707 · CTeX-org/ctex-kit](https://github.com/CTeX-org/ctex-kit/issues/707)
+### Undefined control sequence
 
 [latex报错：Undefined control sequence.解决办法-CSDN博客](https://blog.csdn.net/qlkaicx/article/details/136402882)
-
-### pdfLaTeX中文支持
-
-[Latex overleaf 英文模板如何支持中文_overleaf支持中文-CSDN博客](https://blog.csdn.net/qazwsxrx/article/details/111604175)  
-[polyglossia - critical package ctex error:ctex fontset"fandol" is unavailable in current - TeX - LaTeX Stack Exchange](https://tex.stackexchange.com/questions/545681/critical-package-ctex-errorctex-fontsetfandol-is-unavailable-in-current/545698#545698)  
-[【已解决】latex中文编译 - 技术交流与探讨 / 应用程序与桌面环境 - Arch Linux 中文论坛](https://forum.archlinuxcn.org/t/topic/12153)  
-[LaTeX 中文字体配置基础指南 - 知乎](https://zhuanlan.zhihu.com/p/538459335)  
-[fonts - How to install correctly simhei.ttf and simsun.ttc for pdflatex on TEX Live 2013 - TeX - LaTeX Stack Exchange](https://tex.stackexchange.com/questions/168732/how-to-install-correctly-simhei-ttf-and-simsun-ttc-for-pdflatex-on-tex-live-2013)  
-[【LaTex编译遇到问题】!pdfTeX error: pdflatex (file simhei.ttf): cannot open TrueType font file for reading-CSDN博客](https://blog.csdn.net/Ryan0828/article/details/125559922)
-
-[LaTex支持中文的三种方式_latex可以写中文吗-CSDN博客](https://blog.csdn.net/z_feng12489/article/details/90449495)  
-[LaTex支持中文的三种方式（首推第一种） - 楚千羽 - 博客园](https://www.cnblogs.com/chuqianyu/p/14620014.html)
-
-有时候CTEX一些部分怎么都无法实现中文显示（如`\maketitle`），这时候不妨想想CJKutf8
-
-```latex
-\usepackage{CJKutf8}
-\begin{CJK}{UTF8}{gbsn}
-\title{论文标题} 
-\date{} %不显示日期
-\end{CJK}
-% 下面继续使用CTEX
-```
 
 ### markdown 支持
 
