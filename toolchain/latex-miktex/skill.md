@@ -131,28 +131,71 @@ Topics:
 
 ## Project Manage
 
-### recipe & tool
-
-[搭建 LaTeX 舒适写作环境（VSCode） - 知乎](https://zhuanlan.zhihu.com/p/139210056)
-[VSCode LaTeX WorkShop 配置 | Fenglielie](https://fenglielie.top/p/c90014f2/)
-
-多次编译，实现自动化构建（类似CMake和Maven）
-
-第一种配置是不使用 latexmk，直接使用xelatex等编译命令，使用recipe配置多次编译。在VSCode插件中为`"latex-workshop.latex.recipes”`
-
-第二种配置是使用latexmk自动调用xelatex，lualatex和pdflatex
-
 ### VSCode 插件使用
 
 [IEEE-Template Selector](https://template-selector.ieee.org/secure/templateSelector/downloadTemplate?publicationTypeId=1&titleId=181&articleId=1&fileId=372)
 
-VSCode插件配置和latexmk配置都可以影响编译。因此项目中`.latexmkrc`等配置可能会对插件的编译行为造成影响。但因为插件的选项是通过命令行参数传递的，优先级更高，影响应该不大。
+LaTeX Workshop 插件直接安装使用，我找了IEEE TAC的模板打开。
 
-LaTeX Workshop 插件直接安装使用，我找了IEEE TAC的模板打开。啥也不用干！无脑点运行！
+一般是啥也不用干，无脑点运行，会自动弹出窗提示你安装依赖包（不用担心回滚，包管理器会记录包的安装时间）。几个弹窗过后，main.pdf 就出来了。如果需要自定义的编译选项和流程，请往下看。
 
-会自动弹出窗提示你安装依赖包（不用担心回滚，包管理器会记录包的安装时间）
+#### recipe & tool
 
-几个弹窗过后，main.pdf就出来了
+[搭建 LaTeX 舒适写作环境（VSCode） - 知乎](https://zhuanlan.zhihu.com/p/139210056)
+
+不用 latexmk，配置 tool 直接使用 `xelatex` 等编译命令，使用 recipe 配置多次编译。在VSCode插件中为 `"latex-workshop.latex.recipes”`。举例：
+
+```json
+{
+  "latex-workshop.latex.tools": [
+    {
+      "name": "xelatex",
+      "command": "xelatex",
+      "args": [
+        "-synctex=1",
+        "-interaction=nonstopmode",
+        "-file-line-error",
+        "%DOC%"
+      ]
+    },
+    {
+      "name": "bibtex",
+      "command": "bibtex",
+      "args": ["%DOCFILE%"]
+    }
+  ],
+  "latex-workshop.latex.recipes": [
+    {
+      "name": "xelatex",
+      "tools": ["xelatex"]
+    },
+    {
+      "name": "xelatex -> bibtex -> xelatex*2",
+      "tools": ["xelatex", "bibtex", "xelatex", "xelatex"]
+    }
+  ]
+}
+```
+
+这是一个很典型的流程，具体作用如下：
+1. 生成 `.aux`（收集引文、交叉引用信息）
+2. 生成 `.bbl`（根据 `.aux` 处理参考文献，生成引文列表）
+3. 读入 `.bbl`，写入引文编号/作者年份
+4. 解析交叉引用（`\ref`、`\label`、图号表号），使编号稳定
+
+VSCode 插件，默认没有 `latex-workshop.latex.recipe.default` 配置，因此会使用默认值 `"first"`。
+`latex-workshop.latex.recipes` 内置配置第一个是 `latexmk`。且如果项目没有 `latex-workshop.latex.tools` 会用扩展内置的默认工具，这就定义了 `latexmk` 的参数。
+
+#### latexmkrc
+
+[VSCode LaTeX WorkShop 配置 | Fenglielie](https://fenglielie.top/p/c90014f2/)
+
+使用 latexmk 自动调用 `xelatex`, `lualatex`, `pdflatex`
+
+在 VSCode 插件要特别注意，因为默认配方是 "latexmk"（带 -pdf），命令行参数覆盖 rc 文件。所以你必须：
+
+1. 放一个 `.latexmkrc`。
+2. 把配方切到 "latexmk (latexmkrc)"（或设 `latex-workshop.latex.recipe.default` 指向它。它实际使用的是 "latexmk_rconly" 这个 tool）。
 
 ## Common Pitfalls
 
