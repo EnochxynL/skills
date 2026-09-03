@@ -219,6 +219,7 @@ CC Switch 已包含会话管理功能，但 CC Sessions 更专业，支持删除
 ### 对话记录管理与迁移
 
 [hermes-session-viewer/README-CN.md at main · shaocc1234/hermes-session-viewer](https://github.com/shaocc1234/hermes-session-viewer/blob/main/README-CN.md)
+[【开源自荐】多Agent历史聊天管理工具AgentHist：支持Codex/ClaudeCode/OpenCode/Pi聊天记录迁移互转与经验提炼 - Develop - LINUX DO](https://linux.do/t/topic/2802274)
 
 未完待续
 
