@@ -201,7 +201,7 @@ preview-features = true                          # 开启全部
 
 注意 `preview-features`（数组）与布尔 `preview` 是不同版本的键。旧版本（如 0.11.6）的 `uv.toml` 只接受布尔 `preview`，不接受数组形式。
 
-##### 双系统下的限制
+#### 方案在双系统下的限制
 
 [Project layout | uv — Centralized project environments](https://docs.astral.sh/uv/concepts/projects/layout/#centralized-project-environments) · [Storage | uv — Cache directory](https://docs.astral.sh/uv/reference/storage/#cache-directory)
 
