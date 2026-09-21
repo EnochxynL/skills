@@ -62,13 +62,19 @@ export UV_DEFAULT_INDEX=https://pypi.tuna.tsinghua.edu.cn/simple/
 
 [设置 | uv 中文文档](https://uv.doczh.com/reference/settings/#cache-dir)
 
-### 配置缓存和环境位置
+### 配置缓存位置
 
 [缓存 | uv 中文文档](https://uv.doczh.com/concepts/cache/)
 
 [uv 配置和简单使用\_uv cache-dir怎么配置-CSDN博客 uv 配置和简单使用\_uv配置缓存路径-CSDN博客](https://blog.csdn.net/cnkeysky/article/details/150272793)
 
-**重要：uv 不支持跨盘/跨分区链接。** 缓存和环境必须位于同一文件系统分区上。
+**重要：uv 不支持跨盘/跨分区链接。** 缓存和环境必须位于同一文件系统分区上。uv 官方文档（`docs/reference/storage.md`）里有这条规则的原话，正是整个讨论的根据：
+
+> **For optimal performance, the cache directory needs to be on the same filesystem as virtual environments.**
+
+但是下面也有解决方法
+
+#### 用环境变量集中维护环境
 
 ```bash
 uv cache dir # 查看当前缓存路径
@@ -80,7 +86,60 @@ export UV_CACHE_DIR=/path/to/cache
 export UV_PROJECT_ENVIRONMENT=/path/to/envs
 ```
 
-将 `UV_PROJECT_ENVIRONMENT` 设为固定位置，可以像 conda 一样作为全局环境管理器使用。
+将 `UV_PROJECT_ENVIRONMENT` 设为固定位置，可以像 conda 一样作为全局环境管理器使用。这样，各个项目的虚拟环境都固定。
+
+> ⚠️ **代价：要么统一大环境，要么每个项目单独维护**：默认是 `<项目根>/.venv`，每个项目都要单独维护。如果统一设置了 `UV_PROJECT_ENVIRONMENT` ，所有项目的虚拟环境都在同一目录下。除非在每个项目都用不同的环境变量，那会很麻烦。当然，存在 `direnv` 这样的工具维护环境变量。
+
+#### 用盘根配置灵活修改缓存位置
+
+uv 会**向上查找 `uv.toml`**。所以，对于跨分区链接，在分区根放一个 `uv.toml` 即可。实测：
+
+```toml
+# /media/enoch/DISK/uv.toml
+cache-dir = "/media/enoch/DISK/.uv-cache"
+```
+
+DISK 下**所有**项目（含任意子目录）的 `uv cache dir` 全部变成 DISK 路径，这和 pnpm 把 store 放在盘根（`/media/enoch/DISK/.pnpm-store`）是同一个思路。
+
+实测硬链接核对：
+```
+venv                   → /media/enoch/DISK/_projc2/.venv   (dev 66309 = DISK)
+包文件 dev/inode/links → 66309/42972/2
+在缓存中反查同 inode   → 命中 1 个
+>>> 硬链接成功 ✅ 零复制
+```
+
+**零环境变量、零 direnv、零符号链接、零逐项目维护。** 一个文件覆盖整盘。
+
+> ⚠️ **代价：一处写错，全盘遭殃。** 我刚就踩了 —— 写了个 0.11.6 不支持的键，DISK 下**每一个** uv 命令都直接 TOML 解析报错。所以要加键时先跑 `uv cache dir` 验证，别一次写一堆。
+
+#### 升级 uv + `centralized-project-envs`
+
+uv 有个预览特性做的**正是我手工提议的那件事，但是官方实现**：
+
+> With the `centralized-project-envs` preview feature, uv **stores the default project environment in its cache**. uv attempts to maintain a **`.venv` directory link** to the cached environment so existing activation and editor workflows can continue to use the usual path.
+
+用 uv 0.12.17 实测（DISK 根 `uv.toml` = `cache-dir` + `preview-features = ["centralized-project-envs"]`），然后**普通 `uv sync`**：
+
+```
+.venv -> /media/enoch/DISK/.uv-cache-z/environments-v2/z-cp3.13-5429078305adf030
+                        ↑← uv 自动创建并维护的符号链接
+
+dev/inode/links: 66309/190019/2      ← 硬链接，零复制
+缓存中反查同 inode: 命中 2 个
+uv run → ok, jedi 0.20.0
+```
+
+第二个项目也自动拿到链接（`.venv -> .../z2-cp3.13-004276f5cae0f7df`），共享同一缓存，516ms 完成。
+
+**这是这个问题的终极形态：**
+
+- venv **物理上就在缓存目录里** → 缓存与 venv **永远同文件系统** → 硬链接永远成立
+- `.venv` 链接由 **uv 自己维护** → 不需要任何自愈钩子
+- 一个 DISK 根的配置文件 → 不需要任何 per-project 配置
+- 编辑器/`source activate` 流程不受影响（`.venv` 路径照常可用）
+
+> ⚠️ **你的 uv 是 0.11.6，没有这个特性**（我实测报 `Unknown feature flag`）。要升到 **≥ 0.12.17**。另外 0.11.6 的 `uv.toml` 只接受布尔 `preview`，不接受 `preview-features` 数组 —— 升级后两者才都可用。
 
 ## Instance Manage
 
