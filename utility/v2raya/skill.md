@@ -100,6 +100,16 @@ https://my.ipv6boy.com/index.php#/register?code=nNdMM3zS
 
 `https://my.1984080.xyz/index.php#/register?code=ee4I1kBK`
 
+### 二级代理
+
+https://ip.skk.moe/
+https://www.bright.cn/proxy-types/isp-proxies#anc_pricing
+https://beidou.tw/Services/ResidentialStaticIP?lang=zh-TW
+https://proxyway.com/zh-CN/best/isp-proxies
+https://bunnycommunications.com/
+https://detect.expert/zh-cn/proxy/residential/
+https://www.webshare.io/pricing
+
 ## Common Pitfalls
 
 [Clash for Windows 使用教程 | 开源客户端订阅教程](https://airdocs.gitbook.io/generic/windows/clash)

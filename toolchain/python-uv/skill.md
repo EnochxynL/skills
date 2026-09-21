@@ -1,6 +1,6 @@
 ---
 name: python-uv
-description: Use when managing Python environments with uv as a global environment manager, installing packages via uv pip, configuring cache and mirror sources, handling pkg_resources/setuptools compatibility, numpy version downgrades, src-layout extraPaths, and running CLI tools via uv tool install (uvx).
+description: Use when managing Python environments with uv as a global environment manager, installing packages via uv pip, configuring cache location and mirror sources (including the same-filesystem requirement that keeps cache and environments hardlinked instead of fully copied), handling pkg_resources/setuptools compatibility, numpy version downgrades, src-layout extraPaths, and running CLI tools via uv tool install (uvx).
 metadata:
   hermes:
     tags:
@@ -9,6 +9,8 @@ metadata:
       - environment-management
       - package-management
       - virtual-environment
+      - filesystem
+      - hardlink
   related_skills:
     - python-conda
 ---
@@ -17,18 +19,19 @@ metadata:
 
 ## Overview
 
-uv 是一个极快的 Python 包安装器和解析器，由 Astral 开发（用 Rust 编写）。它的核心思路与 conda 类似：使用缓存把包集中存放，通过硬链接的方式链接到各个项目，从而实现依赖隔离。与 conda 不同的是，uv 可以安装 conda 没有的 pip 包和 ROCm 包。
+uv 是由 Astral 开发的 Python 包安装器与解析器，使用 Rust 编写。其核心思路与 conda 类似：把包集中存放在缓存中，通过硬链接链接到各个项目，实现依赖隔离。与 conda 不同的是，uv 可以安装 conda 没有的 pip 包和 ROCm 包。
 
-uv虽然是围绕项目的（与conda的围绕环境不同），但完全可以把 uv 当作 conda 用，作为全局环境管理器。这样既有 conda 的 Python 版本管理、硬链接优点，又能够安装 conda 没有的 pip 和 ROCm 包。项目环境不必存在 `.venv` 下，直接在 home 下新建和项目文件夹同名的虚拟环境即可。
+uv 以项目为中心（conda 以环境为中心），但完全可以当作全局环境管理器使用，从而同时获得 conda 的 Python 版本管理能力与硬链接去重优势。项目环境不必位于 `.venv`，也可以在 home 下创建与项目同名的虚拟环境。
 
 ## When to Use
 
-* 需要创建、激活或管理 uv python 虚拟环境时
-* 需要使用 uv 安装包、添加依赖或同步项目依赖清单时
-* 需要配置 uv 缓存路径、镜像源（UV\_DEFAULT\_INDEX）或环境变量时
-* 需要初始化一个新的 uv python 项目（uv init）时
-* 需要安装全局 CLI 工具（uv tool install / uvx）时
-* 需要配置 src-layout 项目的 extraPaths 时
+* 创建、激活或管理 uv Python 虚拟环境
+* 使用 uv 安装包、添加依赖或同步项目依赖清单
+* 配置 uv 缓存路径、镜像源（`UV_DEFAULT_INDEX`）或环境变量
+* 初始化新的 uv Python 项目（`uv init`）
+* 安装全局 CLI 工具（`uv tool install` / `uvx`）
+* 配置 src-layout 项目的 extraPaths
+* **排查"跨分区导致包被完整复制而非硬链接"的问题**
 
 ## Common Install
 
@@ -41,105 +44,179 @@ uv虽然是围绕项目的（与conda的围绕环境不同），但完全可以�
 [Windows: \`uv tool update-shell\` saves but does not apply PATH change · Issue #17331 · astral-sh/uv](https://github.com/astral-sh/uv/issues/17331)
 
 ```bash
-# 虽然可以通过 conda 或 scoop 安装，但是推荐官方脚本（推荐）
+# 虽然可以通过 conda 或 scoop 安装，但是推荐官方脚本
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# 更新 PATH 以便运行 uv tool 可执行程序
+# 更新 PATH，以便运行 uv tool 安装的可执行程序
 uv tool update-shell
 ```
 
-使用 `uv python list` 寻找本机的 Python 解释器。
+使用 `uv python list` 查看本机可用的 Python 解释器。
 
 ### 配置镜像源
 
-uv 的配置通过环境变量控制，不放在文件中。在 `profile.ps1` 和 `.bashrc` 中设置，不污染系统环境变量：
+[Settings | uv — index](https://docs.astral.sh/uv/reference/settings/)
+
+[Configuration files | uv](https://docs.astral.sh/uv/concepts/configuration-files/)
+
+配置可通过环境变量或配置文件提供。为避免污染系统环境变量，建议写入 `profile.ps1` / `.bashrc`，或用户级配置文件 `~/.config/uv/uv.toml`。
 
 ```bash
 export UV_DEFAULT_INDEX=https://pypi.tuna.tsinghua.edu.cn/simple/
 ```
 
-## Optional Configure
+优先级（官方原文）：*Settings provided via environment variables take precedence over persistent configuration, and settings provided via the command line take precedence over both.* 即 **命令行 > 环境变量 > 持久配置文件**。
 
-[设置 | uv 中文文档](https://uv.doczh.com/reference/settings/#cache-dir)
+## Optional Configure
 
 ### 配置缓存位置
 
 [缓存 | uv 中文文档](https://uv.doczh.com/concepts/cache/)
+[设置 | uv 中文文档](https://uv.doczh.com/reference/settings/#cache-dir)
+[Storage | uv — Cache directory](https://docs.astral.sh/uv/reference/storage/#cache-directory)
 
 [uv 配置和简单使用\_uv cache-dir怎么配置-CSDN博客 uv 配置和简单使用\_uv配置缓存路径-CSDN博客](https://blog.csdn.net/cnkeysky/article/details/150272793)
 
-**重要：uv 不支持跨盘/跨分区链接。** 缓存和环境必须位于同一文件系统分区上。uv 官方文档（`docs/reference/storage.md`）里有这条规则的原话，正是整个讨论的根据：
+> For optimal performance, the cache directory needs to be on the same filesystem as virtual environments.
 
-> **For optimal performance, the cache directory needs to be on the same filesystem as virtual environments.**
+**规则：uv 不支持跨盘/跨分区链接，缓存与环境必须位于同一文件系统**：uv 安装包时通过 link mode 把缓存中的文件链接进目标环境，而非全量复制。Linux 上默认 link mode 为 `clone`（写时复制 reflink）；文件系统不支持 reflink 时降级为 `hardlink`；**当缓存与目标环境跨文件系统时硬链接不可用，最终降级为全量复制**，并输出警告：
 
-但是下面也有解决方法
-
-#### 用环境变量集中维护环境
-
-```bash
-uv cache dir # 查看当前缓存路径
-
-# 修改缓存位置
-export UV_CACHE_DIR=/path/to/cache
-
-# 修改项目环境位置（全局大环境模式）
-export UV_PROJECT_ENVIRONMENT=/path/to/envs
+```
+warning: Failed to hardlink files; falling back to full copy. This may lead to degraded performance.
+         If the cache and target directories are on different filesystems, hardlinking may not be supported.
+         If this is intentional, set `export UV_LINK_MODE=copy` or use `--link-mode=copy` to suppress this warning.
 ```
 
-将 `UV_PROJECT_ENVIRONMENT` 设为固定位置，可以像 conda 一样作为全局环境管理器使用。这样，各个项目的虚拟环境都固定。
+**根因是 Linux VFS 不允许跨文件系统硬链接**，这不是 uv 的缺陷：`ln` 与 `cp -l` 在跨设备时同样失败（报 `无效的跨设备链接`）。因此所有依赖硬链接去重的工具（uv、pnpm、cargo 等）都受同一约束，无法通过更换工具规避。
 
-> ⚠️ **代价：要么统一大环境，要么每个项目单独维护**：默认是 `<项目根>/.venv`，每个项目都要单独维护。如果统一设置了 `UV_PROJECT_ENVIRONMENT` ，所有项目的虚拟环境都在同一目录下。除非在每个项目都用不同的环境变量，那会很麻烦。当然，存在 `direnv` 这样的工具维护环境变量。
+`--link-mode` 可选值（出处：`uv help pip install`）：
 
-#### 用盘根配置灵活修改缓存位置
+| 值 | 说明 | 前提 |
+|---|---|---|
+| `clone` | 写时复制（reflink） | macOS / Linux 默认值；需文件系统支持 reflink |
+| `hardlink` | 硬链接 | Windows 默认值；需缓存与目标同文件系统 |
+| `symlink` | 符号链接 | 可跨文件系统，但官方明确警告其脆弱性 |
+| `copy` | 全量复制 | 无 |
 
-uv 会**向上查找 `uv.toml`**。所以，对于跨分区链接，在分区根放一个 `uv.toml` 即可。实测：
+官方对 `symlink` 的警告原文：
+
+> WARNING: The use of symlink link mode is discouraged, as they create tight coupling between the cache and the target environment. For example, clearing the cache (`uv cache clean`) will break all installed packages by way of removing the underlying source files.
+
+硬链接具备引用计数保护（清理缓存不会破坏已安装的环境），符号链接不具备 —— 这是两者在安全性上的本质差异。
+
+#### 方案一：用环境变量指定位置，集中维护环境
+
+[Storage | uv — Cache directory](https://docs.astral.sh/uv/reference/storage/#cache-directory) · [Environment variables | uv](https://docs.astral.sh/uv/reference/environment/) · [Configuration files | uv — 优先级](https://docs.astral.sh/uv/concepts/configuration-files/)
+
+```bash
+uv cache dir                            # 查看当前缓存路径
+export UV_CACHE_DIR=/path/to/cache      # 缓存位置；默认 ~/.cache/uv（跟随 XDG_CACHE_HOME）
+export UV_PROJECT_ENVIRONMENT=/path/to/envs   # 项目环境位置；默认 <项目根>/.venv
+```
+
+`UV_PROJECT_ENVIRONMENT` 需要逐项目唯一值：将其设为固定位置可像 conda 一样统一大环境，但所有项目将共用同一环境；若追求逐项目隔离则需逐项目配置，维护成本高。**当目标仅为避免跨文件系统复制时，改 `UV_CACHE_DIR` 是单点操作，改 `UV_PROJECT_ENVIRONMENT` 是逐项目操作。**
+
+[direnv — Setup](https://direnv.net/docs/hook.html)
+[direnv — stdlib（`source_up`）](https://direnv.net/man/direnv-stdlib.1.html)
+
+**按目录自动维护环境变量**可用 `direnv`。注意 direnv 只加载**最近的**一个 `.envrc`，父目录的不会被自动累加；需要继承时，在被遮蔽侧写 `source_up_if_exists`。因此可在分区根放置一个 `.envrc` 覆盖该分区下的所有项目。
+
+#### 方案二：在分区根放置 `uv.toml`
+
+> 出处：[Configuration files | uv](https://docs.astral.sh/uv/concepts/configuration-files/)
+
+uv 会**向上查找 `uv.toml`**。所以，对于跨分区链接，在分区根放一个 `uv.toml` 即可。官方原文：
+
+> uv will search for a `pyproject.toml` or `uv.toml` file in the current directory, **or in the nearest parent directory**.
+
+因此在分区根放置一个 `uv.toml`，即可统一该分区下所有项目的配置：
 
 ```toml
 # /media/enoch/DISK/uv.toml
 cache-dir = "/media/enoch/DISK/.uv-cache"
 ```
 
-DISK 下**所有**项目（含任意子目录）的 `uv cache dir` 全部变成 DISK 路径，这和 pnpm 把 store 放在盘根（`/media/enoch/DISK/.pnpm-store`）是同一个思路。
+效果：该分区下所有项目（含任意子目录）的 `uv cache dir` 均指向该路径；环境位于项目内 `.venv`，与缓存同文件系统，硬链接生效，零复制。
 
-实测硬链接核对：
+**对照：pnpm 具备同类"自动同盘"行为。** 当默认 store 与项目跨文件系统时，pnpm 自动在项目所在分区根创建 `.pnpm-store`，无需任何配置。uv **没有**这种自动行为（在分区内的项目中执行 `uv cache dir` 仍返回 `~/.cache/uv`），必须显式配置。
+
+> 出处：`pnpm install` 运行时输出：`Content-addressable store is at: <分区根>/.pnpm-store/...`
+
+相关规则（出处同上）：
+
+* `uv.toml` 优先于同目录的 `pyproject.toml`；后者的 `[tool.uv]` 将被忽略
+* 三层配置合并顺序：project > user > system；**数组为拼接而非覆盖**
+* 不含 `[tool.uv]` 表的 `pyproject.toml` 会被忽略，uv 继续向上查找
+* 用户级与系统级配置文件**不能**使用 `pyproject.toml` 格式
+
+**限制：`tool` 命令忽略本地配置文件。** 官方原文：
+
+> For `tool` commands, which operate at the user level, local configuration files will be ignored. Instead, uv will exclusively read from user-level configuration (e.g., `~/.config/uv/uv.toml`) and system-level configuration.
+
+即 `uv tool install` 与 `uvx` 不会读取分区根的 `uv.toml`，需另行在用户级配置或环境变量中指定。
+
+**Pitfall：分区根配置出错会影响该分区下所有 uv 命令。** 写入当前版本不支持的键会直接导致 TOML 解析错误，且波及该分区下每一个项目。添加键后应先执行 `uv cache dir` 验证，避免一次写入多个未验证的键。
+
+### 方案三：`centralized-project-envs` 预览特性（uv 自动同盘）
+
+[Project layout | uv — Centralized project environments](https://docs.astral.sh/uv/concepts/projects/layout/#centralized-project-environments) · [Preview features | uv](https://docs.astral.sh/uv/concepts/preview/)
+
+官方说明原文：
+
+> With the `centralized-project-envs` preview feature, uv stores the default project environment in its cache. uv attempts to maintain a `.venv` directory link to the cached environment so existing activation and editor workflows can continue to use the usual path. If link creation fails, uv attempts to write the cached environment path to `.venv` instead. If both attempts fail, uv continues using the cached environment directly, but tools relying on `.venv` may not discover it. Switching interpreters selects separate cached environments and can reuse them later.
+
+该特性让 uv 把项目环境存放于缓存目录内，并**自动维护 `.venv` 符号链接**，因此缓存与环境永远位于同一文件系统，无需任何逐项目配置。
+
+配置（写入选定的配置文件即可，无需环境变量）：
+
+```toml
+# /media/enoch/DISK/uv.toml
+cache-dir = "/media/enoch/DISK/.uv-cache"
+preview-features = ["centralized-project-envs"]
 ```
-venv                   → /media/enoch/DISK/_projc2/.venv   (dev 66309 = DISK)
-包文件 dev/inode/links → 66309/42972/2
-在缓存中反查同 inode   → 命中 1 个
->>> 硬链接成功 ✅ 零复制
-```
 
-**零环境变量、零 direnv、零符号链接、零逐项目维护。** 一个文件覆盖整盘。
-
-> ⚠️ **代价：一处写错，全盘遭殃。** 我刚就踩了 —— 写了个 0.11.6 不支持的键，DISK 下**每一个** uv 命令都直接 TOML 解析报错。所以要加键时先跑 `uv cache dir` 验证，别一次写一堆。
-
-#### 升级 uv + `centralized-project-envs`
-
-uv 有个预览特性做的**正是我手工提议的那件事，但是官方实现**：
-
-> With the `centralized-project-envs` preview feature, uv **stores the default project environment in its cache**. uv attempts to maintain a **`.venv` directory link** to the cached environment so existing activation and editor workflows can continue to use the usual path.
-
-用 uv 0.12.17 实测（DISK 根 `uv.toml` = `cache-dir` + `preview-features = ["centralized-project-envs"]`），然后**普通 `uv sync`**：
+启用后执行普通 `uv sync`，uv 自动创建并维护链接：
 
 ```
-.venv -> /media/enoch/DISK/.uv-cache-z/environments-v2/z-cp3.13-5429078305adf030
-                        ↑← uv 自动创建并维护的符号链接
-
-dev/inode/links: 66309/190019/2      ← 硬链接，零复制
-缓存中反查同 inode: 命中 2 个
-uv run → ok, jedi 0.20.0
+.venv -> /media/enoch/DISK/.uv-cache/environments-v2/<项目名>-cp<版本>-<哈希>
 ```
 
-第二个项目也自动拿到链接（`.venv -> .../z2-cp3.13-004276f5cae0f7df`），共享同一缓存，516ms 完成。
+约束与注意事项：
 
-**这是这个问题的终极形态：**
+* **版本要求：uv ≥ 0.11.25**（引入版本，PR [#18214](https://github.com/astral-sh/uv/pull/18214)）。低于该版本执行会报 `Unknown feature flag`。推荐使用最新版，因 0.11.30 / 0.11.31 包含该特性的后续修复（symlink 访问工作区、含路径的 `.venv` 文件）。
+* **与 `UV_PROJECT_ENVIRONMENT` 互斥**：官方原文 —— *Explicit project environment paths, including `UV_PROJECT_ENVIRONMENT` and environments selected with `--active`, are not centralized.*
+* `--no-cache` 时该特性无效。
+* 环境位于缓存中，`uv cache clean` / `uv cache prune` 会将其移除，下次使用时重建。
+* 对项目/工作区根目录下的无路径 `uv venv` 调用同样生效。
 
-- venv **物理上就在缓存目录里** → 缓存与 venv **永远同文件系统** → 硬链接永远成立
-- `.venv` 链接由 **uv 自己维护** → 不需要任何自愈钩子
-- 一个 DISK 根的配置文件 → 不需要任何 per-project 配置
-- 编辑器/`source activate` 流程不受影响（`.venv` 路径照常可用）
+其他启用方式（出处同上）：
 
-> ⚠️ **你的 uv 是 0.11.6，没有这个特性**（我实测报 `Unknown feature flag`）。要升到 **≥ 0.12.17**。另外 0.11.6 的 `uv.toml` 只接受布尔 `preview`，不接受 `preview-features` 数组 —— 升级后两者才都可用。
+```bash
+uv run --preview                                 # 开启全部预览特性
+uv run --preview-features centralized-project-envs
+UV_PREVIEW=1  /  UV_PREVIEW_FEATURES=centralized-project-envs
+preview-features = true                          # 开启全部
+--no-preview                                     # 关闭全部
+```
+
+注意 `preview-features`（数组）与布尔 `preview` 是不同版本的键。旧版本（如 0.11.6）的 `uv.toml` 只接受布尔 `preview`，不接受数组形式。
+
+#### 方案对比与验证
+
+| 方案 | 零复制 | 逐项目维护 | 缓存位置 | 前提条件 |
+|---|---|---|---|---|
+| 环境变量 `UV_CACHE_DIR` | ✅ | 无（单值全局） | 可任意指定 | 需配合 direnv 等按目录维护工具 |
+| 分区根 `uv.toml` | ✅ | 无（一个文件覆盖全分区） | 分区内 | 接受"一处出错波及全分区"的风险 |
+| `centralized-project-envs` | ✅ | 无（uv 自动维护链接） | 分区内 | uv ≥ 0.11.25 |
+
+验证硬链接是否生效
+
+```bash
+# 在缓存目录中反查是否有同 inode 的文件；有命中即硬链接生效
+find <缓存目录> -samefile <环境中的文件>
+```
+
+**不可**使用 `find <缓存目录> -name <文件名>` 进行判断：uv 缓存内的归档按哈希目录组织，pnpm 等工具更是内容寻址命名，按文件名查找会漏判并得出错误结论。
 
 ## Instance Manage
 
@@ -147,83 +224,80 @@ uv run → ok, jedi 0.20.0
 
 [使用环境 | uv 中文文档](https://uv.doczh.com/pip/environments/#_1)
 
-### 全局 CLI 工具免安装
-
-[How to Use uvx to Run Python Tools from Any Git Branch or Commit | BSWEN](https://docs.bswen.com/blog/2026-03-05-uvx-git-branch/#:~:text=The%20key%20syntax%20is%20uvx%20--from%20git%2Bhttps%3A%2F%2Fgithub.com%2Fuser%2Frepo%40ref%20tool-name.,and%20lets%20you%20test%20development%20versions%20in%20seconds.)
-
-### 全局 CLI 工具安装
-
-安装全局 CLI 工具（隔离环境，不污染 Python 依赖）。等同于 pipx，但更快
-
-```bash
-uv tool install <package-name>
-```
-
-可临时指定源：
-
-```bash
-uv tool install -i https://pypi.tuna.tsinghua.edu.cn/simple/ nodezator
-```
-
 ### 创建和激活虚拟环境
 
-```bash
-# 创建虚拟环境
-uv venv
-uv venv ~/my-project-env    # 指定名称和位置
+[Project layout | uv](https://docs.astral.sh/uv/concepts/projects/layout/) · [Using environments | uv](https://docs.astral.sh/uv/pip/environments/)
 
-# 激活
-source ~/.<env-name>/bin/activate   # Linux/macOS
-# 或 Windows:
-# .\<env-name>\Scripts\activate
+```bash
+uv venv                     # 在当前目录创建 .venv
+uv venv ~/my-project-env    # 指定名称与位置
+
+source ~/.<env-name>/bin/activate   # Linux / macOS
+# Windows: .\<env-name>\Scripts\activate
 ```
 
 ### 包的手动安装
 
-注意：在 uv 管理的虚拟环境中，务必使用 uv pip install，不要直接用 pip install
+[Managing packages | uv](https://docs.astral.sh/uv/pip/packages/)
+
+在 uv 管理的虚拟环境中应使用 `uv pip` 安装包，不要直接使用 `pip install`。
 
 ```bash
-uv pip install <package-name> # 在虚拟环境中安装包（不添加依赖到 pyproject.toml）
-
-uv pip install --editable ../my-package # 安装可编辑包
+uv pip install <package-name>             # 安装包（不写入 pyproject.toml）
+uv pip install --editable ../my-package   # 以可编辑模式安装
 ```
+
+### 全局 CLI 工具安装
+
+> 出处：[Tools | uv](https://docs.astral.sh/uv/guides/tools/)
+
+在隔离环境中安装全局 CLI 工具，等同于 pipx 但更快。
+
+```bash
+uv tool install <package-name>
+
+# 临时指定源
+uv tool install -i https://pypi.tuna.tsinghua.edu.cn/simple/ nodezator
+```
+
+### 全局 CLI 工具免安装运行
+
+[Tools | uv](https://docs.astral.sh/uv/guides/tools/)
+[How to Use uvx to Run Python Tools from Any Git Branch or Commit | BSWEN](https://docs.bswen.com/blog/2026-03-05-uvx-git-branch/#:~:text=The%20key%20syntax%20is%20uvx%20--from%20git%2Bhttps%3A%2F%2Fgithub.com%2Fuser%2Frepo%40ref%20tool-name.,and%20lets%20you%20test%20development%20versions%20in%20seconds.)
+
+`uvx`（等价于 `uv tool run`）在临时隔离环境中直接运行工具，不产生持久安装。
+
+参考实例：[How to Use uvx to Run Python Tools from Any Git Branch or Commit | BSWEN](https://docs.bswen.com/blog/2026-03-05-uvx-git-branch/)
 
 ## Project Manage
 
-[结构与文件 | uv 中文文档](https://uv.doczh.com/concepts/projects/layout/)
-
 ### 生成项目配置
 
+[Creating projects | uv](https://docs.astral.sh/uv/concepts/projects/init/)
+
 ```bash
-uv init
-uv init my-project
-# 生成 pyproject.toml 和 .python-version
+uv init              # 在当前目录初始化
+uv init my-project   # 新建目录并初始化
 ```
+
+生成 `pyproject.toml` 与 `.python-version`。
 
 ### 自动依赖管理
 
-```bash
-# 添加依赖（更新 pyproject.toml）
-uv add numpy
-
-# 删除依赖
-uv remove numpy
-
-# 添加可编辑包依赖
-uv add --editable ../projects/bar/
-```
-
-应用依赖：自动安装`pyproject.toml`指定的包
+[Managing dependencies | uv](https://docs.astral.sh/uv/concepts/projects/dependencies/) · [Locking and syncing | uv](https://docs.astral.sh/uv/concepts/projects/sync/)
 
 ```bash
-uv sync
+uv add numpy                        # 添加依赖（更新 pyproject.toml）
+uv remove numpy                     # 删除依赖
+uv add --editable ../projects/bar   # 添加可编辑包依赖
+uv sync                             # 按 pyproject.toml 同步环境
 ```
 
 ### 脚本快捷方式
 
-[mjlab/pyproject.toml at main · mujocolab/mjlab](https://github.com/mujocolab/mjlab/blob/main/pyproject.toml)
+[Running commands | uv](https://docs.astral.sh/uv/concepts/projects/run/)
 
-和`uv run`相关。在 `pyproject.toml` 中配置：
+在 `pyproject.toml` 中声明入口：
 
 ```toml
 [project.scripts]
@@ -236,9 +310,13 @@ train = "my_package.scripts.train:main"
 uv run train
 ```
 
-### 项目高亮路径
+参考实例：[mjlab/pyproject.toml](https://github.com/mujocolab/mjlab/blob/main/pyproject.toml)
+
+### 项目高亮路径（src-layout）
 
 [Python 项目布局大揭秘：src 布局与扁平布局深度对比 - 知乎](https://zhuanlan.zhihu.com/p/24184783363)
+
+> 出处：此为编辑器/LSP 侧配置，非 uv 功能。字段定义见 [Pyright configuration](https://microsoft.github.io/pyright/#/configuration)
 
 对于 src-layout 包，即使 editable install 后代码高亮仍无法搜索内部类。在 `pyproject.toml` 中添加：
 
@@ -249,51 +327,53 @@ extraPaths = [
 ]
 ```
 
-### 动态import高亮
+### 动态 import 高亮（静态检查工具的固有局限）
 
-[修复pip安装isaacsim 没有Pylance类型提示\_修复isaacsim依赖-CSDN博客](https://blog.csdn.net/gengmingqi/article/details/149835516)
+> 出处：同上，非 uv 功能
 
-[Cannot click into isaaclab paths in VS Code (pip installation) - Omniverse / Isaac Sim - NVIDIA Developer Forums](https://forums.developer.nvidia.com/t/cannot-click-into-isaaclab-paths-in-vs-code-pip-installation/326339)
+静态检查工具天生不支持动态 import，对 pip 安装的 isaaclab 这类包无解，同样通过 `extraPaths` 缓解。
 
-[How to setup linter (in VScode) for PIP installed isaacsim? - Omniverse / Isaac Sim - NVIDIA Developer Forums](https://forums.developer.nvidia.com/t/how-to-setup-linter-in-vscode-for-pip-installed-isaacsim/323481/5)
-
-静态检查工具天生不支持动态import，因此对于像pip安装的isaaclab这样的包本就无能为力。同样添加extraPaths
+参考资料：
+* [修复 pip 安装 isaacsim 没有 Pylance 类型提示 - CSDN](https://blog.csdn.net/gengmingqi/article/details/149835516)
+* [Cannot click into isaaclab paths in VS Code (pip installation) - NVIDIA Developer Forums](https://forums.developer.nvidia.com/t/cannot-click-into-isaaclab-paths-in-vs-code-pip-installation/326339)
+* [How to setup linter (in VScode) for PIP installed isaacsim? - NVIDIA Developer Forums](https://forums.developer.nvidia.com/t/how-to-setup-linter-in-vscode-for-pip-installed-isaacsim/323481/5)
 
 ## Verification Checklist
 
-*   [ ] **uv 可用**
+* [ ] **uv 可用**
 
     ```bash
     uv --version
     uv python list
     ```
-*   [ ] **缓存路径正确**
+* [ ] **缓存路径正确，且与环境位于同一文件系统**
 
     ```bash
-    uv cache dir # 与环境/缓存同分区
+    uv cache dir                                  # 应与环境位于同一分区
+    find <缓存目录> -samefile <环境中的文件>       # 有命中 = 硬链接生效
     ```
-*   [ ] **虚拟环境可创建**
+* [ ] **虚拟环境可创建**
 
     ```bash
     uv venv test-env
     ```
-*   [ ] **镜像源已配置**
+* [ ] **镜像源已配置**
 
     ```bash
     echo $UV_DEFAULT_INDEX
     ```
-*   [ ] **包安装正常**
+* [ ] **包安装正常**
 
     ```bash
     uv pip install requests
     python -c "import requests"
     ```
-*   [ ] **setuptools 版本兼容**（如需要 pkg\_resources）
+* [ ] **setuptools 版本兼容**（如需 `pkg_resources`）
 
     ```bash
     uv pip show setuptools | grep Version
     ```
-*   [ ] **uv tool 可用**
+* [ ] **uv tool 可用**
 
     ```bash
     uv tool install ruff
