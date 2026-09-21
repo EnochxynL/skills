@@ -157,7 +157,7 @@ cache-dir = "/media/enoch/DISK/.uv-cache"
 
 **Pitfall：分区根配置出错会影响该分区下所有 uv 命令。** 写入当前版本不支持的键会直接导致 TOML 解析错误，且波及该分区下每一个项目。添加键后应先执行 `uv cache dir` 验证，避免一次写入多个未验证的键。
 
-### 方案三：`centralized-project-envs` 预览特性（uv 自动同盘）
+#### 方案三：`centralized-project-envs` 预览特性（uv 自动同盘）
 
 [Project layout | uv — Centralized project environments](https://docs.astral.sh/uv/concepts/projects/layout/#centralized-project-environments) · [Preview features | uv](https://docs.astral.sh/uv/concepts/preview/)
 
@@ -200,6 +200,25 @@ preview-features = true                          # 开启全部
 ```
 
 注意 `preview-features`（数组）与布尔 `preview` 是不同版本的键。旧版本（如 0.11.6）的 `uv.toml` 只接受布尔 `preview`，不接受数组形式。
+
+##### 双系统下的限制
+
+[Project layout | uv — Centralized project environments](https://docs.astral.sh/uv/concepts/projects/layout/#centralized-project-environments) · [Storage | uv — Cache directory](https://docs.astral.sh/uv/reference/storage/#cache-directory)
+
+该特性与"双系统共享同一缓存"在原理上冲突，建议仅在单系统环境下启用。
+
+**环境目录本身不会碰撞。** 环境目录名形如 `<项目名>-cp<Python版本>-<哈希>`，其哈希包含项目的**绝对路径**（并解析真实路径，经符号链接访问会得到同一目录）。因此 Linux 的 `/media/enoch/DISK/...` 与 Windows 的 `D:\...` 会算出不同哈希，两个平台的虚拟环境在共享缓存中各自独立；额外磁盘占用仅为 venv 骨架，包文件仍从同一 `archive-v0` 硬链接。
+
+**但存在两个跨平台争用点：**
+
+1. **`.venv` 链接器争用。** Linux 下 `.venv` 为符号链接；Windows 下创建符号链接可能失败，此时 uv 按官方说明退化为把环境路径写入 `.venv` 普通文件。同一项目目录被两个系统使用时，两侧会互相覆盖 `.venv`，表现为激活失败或编辑器找不到解释器。
+2. **`uv cache clean` / `uv cache prune` 跨平台误删。** 集中化的环境会被缓存清理命令移除；在共享缓存下，另一系统独有的环境在本侧视角中从未被访问，存在被判为未使用而删除的风险。
+
+**根本原因**：该特性把**平台耦合**的虚拟环境放进了**内容寻址**的缓存，抹去了"缓存共享、环境隔离"的边界。对照 pnpm 的设计：其 store 为纯内容寻址（文件名仅含内容哈希），平台相关的 `node_modules` 始终留在项目内，边界清晰。
+
+**双系统场景应改用方案二**（分区根 `uv.toml` 指定 `cache-dir`）：缓存跨平台共享去重，环境留于 `<项目根>/.venv` 实现平台隔离，且因环境与缓存同分区，硬链接依然生效。
+
+> 待验证项：源码构建缓存（`sdists-v9`、`builds-v0`）的键理论上必须包含平台信息（构建产物需在目标平台编译），但未取得实测证据。若该键不含平台，跨系统共享缓存会复用另一平台的编译产物。
 
 #### 方案对比与验证
 
