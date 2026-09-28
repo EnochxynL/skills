@@ -73,18 +73,19 @@ vcpkg --version    # vcpkg package management program version 2025-09-03
 
 #### 在 PowerShell 中自动激活
 
-编辑 `Documents\WindowsPowerShell\profile.ps1`：
-
 [VS CODE可以配置用vc++编译和调试吗？ - 知乎](https://www.zhihu.com/question/264317543/answer/1863858462)
 
 [自定义 shell 环境 - Microsoft Learn](https://learn.microsoft.com/zh-cn/powershell/scripting/learn/shell/creating-profiles?view=powershell-7.5)
 
-```powershell
-# VS 2022
-Import-Module "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\Common7\Tools\Microsoft.VisualStudio.DevShell.dll"
-Enter-VsDevShell 3a05b757
+观察`C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Visual Studio\Visual Studio Tools\Developer PowerShell for VS.lnk`和`C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\Common7\Tools\Launch-VsDevShell.ps1`
 
-# VS 2026
+可知，编辑 `Documents\WindowsPowerShell\profile.ps1`，加入一行`& "C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\Common7\Tools\Launch-VsDevShell.ps1"`即可
+
+#### 在 PowerShell 中手动激活
+
+在终端中间手动激活就需要两条指令。下面只是例子
+
+```powershell
 Import-Module "C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\Common7\Tools\Microsoft.VisualStudio.DevShell.dll"
 Enter-VsDevShell bd850d24
 ```
