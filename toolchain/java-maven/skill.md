@@ -34,6 +34,11 @@ Maven Daemon：类比 mamba 和 conda 的关系，Maven Daemon 是 Maven 的加�
 
 ### JDK 安装
 
+[利用Scoop 自由切换java(jdk)版本利用Scoop 自由切换java(jdk)版本 应为笔者经常需要java8 - 掘金](https://juejin.cn/post/7322442553550307380)
+[Uninstalling Scoop · ScoopInstaller/Scoop Wiki](https://github.com/ScoopInstaller/scoop/wiki/Uninstalling-Scoop)
+
+用 scoop 管理 JDK 版本，出奇地合适
+
 从 Oracle 直接下载 msi 安装包，安装包会自动配置环境变量。具体来说是会在系统 `PATH` 添加 `C:\Program Files\Common Files\Oracle\Java\javapath`，它会自动路由到当前安装的某个版本 `java` 
 
 ### Maven 安装

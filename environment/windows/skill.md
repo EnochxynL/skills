@@ -61,6 +61,10 @@
 
 
 
+## 无人值守脚本
+
+[Use autounattend.xml files to install Windows 10/11](https://schneegans.de/windows/unattend-generator/usage/#winpedriverfolder)
+[Wintech Labs - Unattended Toolkit XP Edition](https://unattended.wintech.pt/)
 
 
 
