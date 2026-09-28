@@ -41,8 +41,6 @@ uv 以项目为中心（conda 以环境为中心），但完全可以当作全�
 
 ### 安装 uv
 
-[Installation | uv](https://docs.astral.sh/uv/getting-started/installation/)
-
 [Windows 安装 uv 并指定安装目录 - 图文 - ONEUE](https://www.oneue.com/articles/2430.html)
 
 [Windows: \`uv tool update-shell\` saves but does not apply PATH change · Issue #17331 · astral-sh/uv](https://github.com/astral-sh/uv/issues/17331)
@@ -62,75 +60,45 @@ uv tool update-shell
 
 [Configuration files | uv](https://docs.astral.sh/uv/concepts/configuration-files/)
 
+配置可通过环境变量或配置文件提供。为避免污染系统环境变量，建议写入 `profile.ps1` / `.bashrc`，或用户级配置文件 `~/.config/uv/uv.toml`。
+
 uv 的配置分为两层：**project 级**（向上查找发现）与 **user / system 级**（固定目录发现）。
 
-**project 级**：
-* 优先级链：**命令行 > 环境变量 > project 级 > user 级 > system 级**
-* 标量键冲突时高层**覆盖**低层；**数组键冲突时拼接**（project 的排在前面，不会被顶掉）
-* `uv.toml` 优先于同目录的 `pyproject.toml`（后者整个被忽略）
-* user / system 级配置文件**不能**使用 `pyproject.toml` 格式
-* 同类多文件时**只取先发现的一个**（如 system 级同时存在 `/etc/uv/uv.toml` 与 `$XDG_CONFIG_DIRS/uv/uv.toml`，XDG 优先）
-* `--no-config` 可完全禁用持久配置发现
+- 优先级链：**命令行 > 环境变量 > project 级 > user 级 > system 级**
+- 标量键冲突时高层**覆盖**低层；**数组键冲突时拼接**（project 的排在前面，不会被顶掉）
 
-**向上查找规则**：向上查找在**第一个含 `[tool.uv]` 表的 `pyproject.toml`** 处**停止**。因此项目自身一旦带 `[tool.uv]`，更上层（例如分区根）的 `uv.toml` 就**永远看不到**。
+**project 级**：
+- `uv.toml` 优先于同目录的 `pyproject.toml`（后者整个被忽略）
+- `--no-config` 可完全禁用持久配置发现
+- **向上查找规则**：向上查找在**第一个含 `[tool.uv]` 表的 `pyproject.toml`** 处**停止**。因此项目自身一旦带 `[tool.uv]`，更上层（例如分区根）的 `uv.toml` 就**永远看不到**。
 
 **user / system 级**（独立发现，不参与向上查找，因此不受上述截断影响）：
+- user / system 级配置文件不使用 `pyproject.toml` 格式
+- 同类多文件时，只取先发现的一个（如 system 级同时存在 `/etc/uv/uv.toml` 与 `$XDG_CONFIG_DIRS/uv/uv.toml`，XDG 优先）
+- `uv tool install` 与 `uvx` 不读取 project 级配置，但**会**读取 user 级配置。
+
+**最后，还有环境变量级**
 
 | 平台 | user 级 | system 级 |
 |---|---|---|
 | Linux / macOS | `~/.config/uv/uv.toml` | `/etc/uv/uv.toml` |
 | Windows | `%APPDATA%\uv\uv.toml` | `%PROGRAMDATA%\uv\uv.toml` |
 
-`uv tool install` 与 `uvx` 不读取 project 级配置，但**会**读取 user 级配置。
-
-**没有 include / extends 机制。** 实测写入 `include = [...]` 或 `extends = "..."` 均报 `unknown field`，且完整合法键清单（约 71 个键）中不存在任何导入类键。
+配置没有 include / extends 机制。实测写入 `include = [...]` 或 `extends = "..."` 均报 `unknown field`，且完整合法键清单（约 71 个键）中不存在任何导入类键。
 
 ### 配置镜像源
-
-[Settings | uv — index](https://docs.astral.sh/uv/reference/settings/)
-
-[Configuration files | uv](https://docs.astral.sh/uv/concepts/configuration-files/)
-
-配置可通过环境变量或配置文件提供。为避免污染系统环境变量，建议写入 `profile.ps1` / `.bashrc`，或用户级配置文件 `~/.config/uv/uv.toml`。
 
 ```bash
 export UV_DEFAULT_INDEX=https://pypi.tuna.tsinghua.edu.cn/simple/
 ```
 
-## Optional Configure
-
 ### 配置缓存位置
-
-[缓存 | uv 中文文档](https://uv.doczh.com/concepts/cache/)
-[设置 | uv 中文文档](https://uv.doczh.com/reference/settings/#cache-dir)
-[Storage | uv — Cache directory](https://docs.astral.sh/uv/reference/storage/#cache-directory)
 
 [uv 配置和简单使用\_uv cache-dir怎么配置-CSDN博客 uv 配置和简单使用\_uv配置缓存路径-CSDN博客](https://blog.csdn.net/cnkeysky/article/details/150272793)
 
-官方明确要求：
+uv 安装包时通过 `--link-mode` （出处：`uv help pip install`）把缓存中的文件"链接"进目标环境，Linux 上默认 `--link-mode clone`（写时复制 reflink）；文件系统不支持 reflink 时降级为 `hardlink`；**当缓存与目标环境跨文件系统时硬链接不可用，最终降级为全量复制`--link-mode copy`**，并输出警告：`warning: Failed to hardlink files; falling back to full copy.`，根因是 Linux VFS 不允许跨文件系统硬链接。
 
-> For optimal performance, the cache directory needs to be on the same filesystem as virtual environments.
-
-机制：uv 安装包时通过 link mode 把缓存中的文件"链接"进目标环境，而非全量复制。Linux 上默认 link mode 为 `clone`（写时复制 reflink）；文件系统不支持 reflink 时降级为 `hardlink`；**当缓存与目标环境跨文件系统时硬链接不可用，最终降级为全量复制**，并输出警告：
-
-```
-warning: Failed to hardlink files; falling back to full copy. This may lead to degraded performance.
-         If the cache and target directories are on different filesystems, hardlinking may not be supported.
-         If this is intentional, set `export UV_LINK_MODE=copy` or use `--link-mode=copy` to suppress this warning.
-```
-
-**根因是 Linux VFS 不允许跨文件系统硬链接**，这不是 uv 的缺陷：`ln` 与 `cp -l` 在跨设备时同样失败（报 `无效的跨设备链接`）。因此所有依赖硬链接去重的工具（uv、pnpm、cargo 等）都受同一约束，无法通过更换工具规避。
-
-`--link-mode` 可选值（出处：`uv help pip install`）：
-
-| 值 | 说明 | 前提 |
-|---|---|---|
-| `clone` | 写时复制（reflink） | macOS / Linux 默认值；需文件系统支持 reflink |
-| `hardlink` | 硬链接 | Windows 默认值；需缓存与目标同文件系统 |
-| `symlink` | 符号链接 | 可跨文件系统，但官方明确警告其脆弱性 |
-| `copy` | 全量复制 | 无 |
-
-官方对 `symlink` 的警告原文：
+当然也可以通过`--link-mode symlink`跨文件系统符号链接，但官方对 `symlink` 的警告：
 
 > WARNING: The use of symlink link mode is discouraged, as they create tight coupling between the cache and the target environment. For example, clearing the cache (`uv cache clean`) will break all installed packages by way of removing the underlying source files.
 
@@ -138,103 +106,41 @@ warning: Failed to hardlink files; falling back to full copy. This may lead to d
 
 #### 推荐方案：`centralized-project-envs` 集中方案
 
-[Project layout | uv — Centralized project environments](https://docs.astral.sh/uv/concepts/projects/layout/#centralized-project-environments) · [Preview features | uv](https://docs.astral.sh/uv/concepts/preview/) · [Storage | uv — Configuration directories](https://docs.astral.sh/uv/reference/storage/)
+[Project layout | uv — Centralized project environments](https://docs.astral.sh/uv/concepts/projects/layout/#centralized-project-environments)
+[Preview features | uv](https://docs.astral.sh/uv/concepts/preview/)
+[Storage | uv — Configuration directories](https://docs.astral.sh/uv/reference/storage/)
 
-在Windows下我习惯这样一键写入：`'{0}preview-features = ["centralized-project-envs"]' -f '' | Set-Content "$env:APPDATA\uv\uv.toml"`
+- 在Windows下我习惯这样一键写入：`'{0}preview-features = ["centralized-project-envs"]' -f '' | Set-Content "$env:APPDATA\uv\uv.toml"`
+- 环境变量为`UV_PREVIEW=1`和`UV_PREVIEW_FEATURES=centralized-project-envs`
 
-**思想**：不要试图把缓存搬去项目所在的分区，而是**让三类产物全部落在同一个分区**（系统盘），再由 `centralized-project-envs` 把项目环境也纳入缓存目录 —— 「同文件系统」由构造保证，与项目位于哪个分区**无关**。
-
-uv 的三类产物与默认位置：
-
-| 产物 | 默认位置（Linux） | 设备 |
-|---|---|---|
-| 缓存 | `~/.cache/uv` | 系统盘 |
-| 工具环境 | `~/.local/share/uv/tools` | 系统盘 |
-| 项目环境 | `~/.cache/uv/environments-v2/`（由本特性决定） | 系统盘 |
-
-三者默认就在同一分区，因此**不需要设置 `cache-dir`，也不需要 `UV_TOOL_DIR`**。唯一需要的配置是启用预览特性：
+配置写入效果如下：
 
 ```toml
 # ~/.config/uv/uv.toml     （Windows: %APPDATA%\uv\uv.toml）
 preview-features = ["centralized-project-envs"]
 ```
 
-启用后执行普通 `uv sync`，uv 自动创建并维护软链接：
+**版本要求：uv ≥ 0.11.25**（引入版本，PR [#18214](https://github.com/astral-sh/uv/pull/18214)）。低于该版本报 `Unknown feature flag`。推荐最新版，因 0.11.30 / 0.11.31 含该特性的后续修复（symlink 访问工作区、含路径的 `.venv` 文件）。`--no-cache` 和指定 `UV_PROJECT_ENVIRONMENT` 时该特性无效。
+
+`centralized-project-envs` 把项目环境也纳入缓存目录 —— 「同文件系统」由构造保证，与项目位于哪个分区无关。最终让三类产物全部落在同一个分区（系统盘）
+
+| 产物 | 默认位置（Linux） | 设备 |
+|---|---|---|
+| 缓存 | `~/.cache/uv` | 系统盘 |
+| 工具环境 | `~/.local/share/uv/tools` | 系统盘 |
+| 项目环境 | `~/.cache/uv/environments-v2/`（由本特性决定） | **系统盘** |
+
+启用后执行普通 `uv sync`，uv 在项目文件夹内自动创建并维护软链接：
 
 ```
 <项目>/.venv -> ~/.cache/uv/environments-v2/<项目名>-cp<Python版本>-<哈希>
 ```
 
-效果：
+切换系统后第一次 `uv sync` 需重建一次链接，这不会破坏缓存中的环境，因此不需要重新下载。但是`uv cache clean` / `uv cache prune` 会一并删除项目环境，项目 `.venv` 变成死链。
 
-* 项目所在分区（如 NTFS 数据盘）上只剩**一个软链接**，实占 0 字节
-* 环境实体在系统盘的缓存目录内，与缓存**必然同盘** → 硬链接成立、零复制
-* 环境不再受数据盘的文件系统缺陷影响（如 NTFS 的 `chown` EPERM、稀疏文件不可用、exec 位语义）
-* 无需逐项目配置，也无需任何 shell 逻辑判断
+可以用 `find <缓存目录> -samefile <环境中的文件>` 验证硬链接是否生效。
 
-前置条件与约束：
-
-* **版本要求：uv ≥ 0.11.25**（引入版本，PR [#18214](https://github.com/astral-sh/uv/pull/18214)）。低于该版本报 `Unknown feature flag`。推荐最新版，因 0.11.30 / 0.11.31 含该特性的后续修复（symlink 访问工作区、含路径的 `.venv` 文件）。
-* **环境目录不会碰撞**：目录名中的哈希包含项目的**绝对路径**（并解析真实路径，经符号链接访问得到同一环境）。
-* **`uv cache clean` / `uv cache prune` 会一并删除项目环境**。删除后项目 `.venv` 变成死链，下次 `uv sync` 时重建。**因此不要用 `prune` 给系统盘腾空间** —— 那等于把所有项目环境拆了重装。
-* **与 `UV_PROJECT_ENVIRONMENT` 互斥**：官方原文 —— *Explicit project environment paths, including `UV_PROJECT_ENVIRONMENT` and environments selected with `--active`, are not centralized.*
-* `--no-cache` 时该特性无效。
-* 对项目/工作区根目录下的无路径 `uv venv` 调用同样生效。
-* **软链接无法被另一系统解析，但代价仅为一次重新链接**。`.venv` 是**每台机器各自维护**的软链接：链接名共用而目标不同 —— 系统 A 的 `.venv` 指向 A 缓存内的环境目录，系统 B 看到的是死链（环境名含项目绝对路径的哈希，两侧互不碰撞）。实测在死链状态下执行 `uv sync`：uv **自动把链接改指回自己缓存内的环境**，且**不重装任何包**（输出 `Checked 1 package in 0.04ms`，环境实体的创建时间不变）。由此可得同一项目目录被两系统轮流使用时的实际行为：
-
-    * 两个平台的环境实体**各自完整保留**在各自缓存中，互不破坏
-    * **切换系统后第一次 `uv sync` 需重建一次链接**，秒级完成，无重新安装
-    * 因此不必强制按 OS 隔离项目树；只要接受"切系统后 sync 一次"即可
-
-* **若要求零交互，可为两侧固定不同环境名**：`UV_PROJECT_ENVIRONMENT=.venv_linux` / `.venv_windows`（该键**只能走环境变量**，`project-environment` 不是 `uv.toml` 合法键，也无对应命令行参数）。**代价是该变量会使本节的集中化完全失效** —— 实测此时 `.venv_*` 退化为项目内真实目录、缓存内 `environments-v2` 为空。届时必须把缓存放回项目所在分区，否则硬链接失效、退化为全量复制。
-
-其他启用方式（出处同上）：
-
-```bash
-uv run --preview                                 # 开启全部预览特性
-uv run --preview-features centralized-project-envs
-UV_PREVIEW=1  /  UV_PREVIEW_FEATURES=centralized-project-envs
-preview-features = true                          # 开启全部
---no-preview                                     # 关闭全部
-```
-
-注意 `preview-features`（数组）与布尔 `preview` 是不同版本的键。旧版本（如 0.11.6）的 `uv.toml` 只接受布尔 `preview`，写入 `preview-features` 会使该机器上**所有** uv 命令报 TOML 解析错误（配置"毒化"）。
-
-#### 备选方案：环境变量指定位置
-
-[Environment variables | uv](https://docs.astral.sh/uv/reference/environment/) · [Storage | uv — Cache directory](https://docs.astral.sh/uv/reference/storage/#cache-directory)
-
-```bash
-uv cache dir                                   # 查看当前缓存路径
-export UV_CACHE_DIR=/path/to/cache             # 缓存位置；默认 ~/.cache/uv
-export UV_PROJECT_ENVIRONMENT=/path/to/envs    # 项目环境位置；默认 <项目根>/.venv
-export UV_TOOL_DIR=/path/to/tools              # 工具环境位置（无 uv.toml 键，只能走环境变量）
-```
-
-`UV_PROJECT_ENVIRONMENT` 需要逐项目唯一值：设为固定位置可达 conda 式统一大环境，但所有项目将共用同一环境；追求逐项目隔离则需逐项目配置，维护成本高。**当目标仅为避免跨文件系统复制时，改 `UV_CACHE_DIR` 是单点操作，改 `UV_PROJECT_ENVIRONMENT` 是逐项目操作。**
-
-**按目录自动维护环境变量**可用 `direnv`：
-
-> 出处：[direnv — Setup](https://direnv.net/docs/hook.html) · [direnv — stdlib（`source_up`）](https://direnv.net/man/direnv-stdlib.1.html)
-
-注意 direnv 只加载**最近的**一个 `.envrc`，父目录的不会被自动累加；需要继承时在被遮蔽侧写 `source_up_if_exists`。direnv 只覆盖交互式 shell —— IDE、Makefile、cron 等调用不受其影响。
-
-#### 验证硬链接是否生效
-
-```bash
-# 在缓存目录中反查是否有同 inode 的文件；有命中即硬链接生效
-find <缓存目录> -samefile <环境中的文件>
-```
-
-**不可**使用 `find <缓存目录> -name <文件名>` 进行判断：uv 缓存内的归档按哈希目录组织，pnpm 等工具更是内容寻址命名，按文件名查找会漏判并得出错误结论。
-
-也可用「真实边际占用」量化效果 —— 统计 `links=1` 的文件字节数：
-
-```bash
-find <环境目录> -type f -links 1 -printf '%s\n' | awk '{s+=$1} END{printf "%.1f MB\n", s/1048576}'
-```
-
-该值接近 venv 骨架大小（通常 1–6 MB）即说明硬链接几乎全部成立。
+## Optional Configure
 
 ## Instance Manage
 
